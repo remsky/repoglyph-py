@@ -32,10 +32,10 @@ repoglyph . --style skyline --palette neon
 repoglyph . --commits 100 --out banner.svg
 ```
 
-Default output:
+Default output (inside the rendered repo; `--out-dir` or `--out` to override):
 
 ```text
-output/<owner>_<repo>/<owner>_<repo>_<style>.svg
+<repo>/.glyph/<owner>_<repo>_<style>.svg
 ```
 
 If `resvg-py` is installed, a PNG is written beside the SVG. Use `--no-png` to
@@ -51,10 +51,18 @@ skip it.
 | `--size WxH` | `1280x480` | SVG canvas size |
 | `--full` | off | fit canvas to the whole city |
 | `--out FILE` | auto | output SVG path |
+| `--out-dir DIR` | `<repo>/.glyph` | folder for all outputs |
 | `--no-png` | off | skip PNG output |
 | `--okf [DIR]` | off | write an OKF context bundle |
+| `--cache` | off | save repo data for `--from-cache` |
 
 Run `repoglyph --help` for the full list.
+
+## Caching
+
+Off by default. `--cache` saves the gathered repo data to
+`<out-dir>/cache.json` (`--cache-dir` to relocate); `--from-cache`
+re-renders from that snapshot without reading git.
 
 ## Styles
 

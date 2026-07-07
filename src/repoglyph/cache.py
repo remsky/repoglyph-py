@@ -1,4 +1,4 @@
-"""Persist CityData to a per-repo JSON snapshot and reload it."""
+"""Persist CityData to a JSON snapshot in the output folder and reload it."""
 
 from __future__ import annotations
 
@@ -9,10 +9,10 @@ from pathlib import Path
 
 from repoglyph.models import CityData, SourceFile
 
-__all__ = ["CACHE_DIR", "repo_stem", "cache_path", "save_city", "load_city"]
+__all__ = ["CACHE_NAME", "repo_stem", "save_city", "load_city"]
 
-#: Default directory (relative to the working directory) for cache snapshots.
-CACHE_DIR = Path("repo_cache")
+#: Snapshot filename inside the output folder.
+CACHE_NAME = "cache.json"
 
 #: Bump if the serialized shape changes incompatibly.
 _FORMAT_VERSION = 1
@@ -25,18 +25,10 @@ def repo_stem(repo: str) -> str:
     return re.sub(r"[^\w.-]", "_", repo)
 
 
-def cache_path(repo: str, cache_dir: Path = CACHE_DIR) -> Path:
-    """Return the cache file path for *repo* (``owner/repo`` -> one JSON file)."""
-    return cache_dir / (repo_stem(repo) + ".json")
-
-
-def save_city(data: CityData, cache_dir: Path = CACHE_DIR) -> Path:
-    """Write *data* to the cache as JSON, overwriting any prior snapshot.
-
-    Returns the path written.
-    """
-    cache_dir.mkdir(parents=True, exist_ok=True)
-    path = cache_path(data.repo, cache_dir)
+def save_city(data: CityData, out_dir: Path) -> Path:
+    """Write *data* to ``out_dir/cache.json``, overwriting any prior snapshot."""
+    out_dir.mkdir(parents=True, exist_ok=True)
+    path = out_dir / CACHE_NAME
 
     payload = {
         "format_version": _FORMAT_VERSION,
@@ -54,21 +46,19 @@ def save_city(data: CityData, cache_dir: Path = CACHE_DIR) -> Path:
     return path
 
 
-def load_city(repo: str, cache_dir: Path = CACHE_DIR) -> CityData:
-    """Reconstruct ``CityData`` for *repo* from its cached JSON snapshot.
+def load_city(out_dir: Path) -> CityData:
+    """Reconstruct ``CityData`` from ``out_dir/cache.json``.
 
-    Raises ``FileNotFoundError`` if no snapshot exists.
+    Raises ``FileNotFoundError`` if absent, ``ValueError`` if incompatible.
     """
-    path = cache_path(repo, cache_dir)
+    path = out_dir / CACHE_NAME
     payload = json.loads(path.read_text(encoding="utf-8"))
 
     version = payload.get("format_version")
     if version != _FORMAT_VERSION:
-        logger.warning(
-            "cache %s has format_version %r (expected %d); loading anyway",
-            path,
-            version,
-            _FORMAT_VERSION,
+        raise ValueError(
+            f"cache {path} has format_version {version!r} (expected {_FORMAT_VERSION}); "
+            "refresh it by running with --cache"
         )
 
     return CityData(

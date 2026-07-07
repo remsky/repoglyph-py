@@ -10,7 +10,7 @@ import sys
 from pathlib import Path
 
 from repoglyph import __version__
-from repoglyph.cache import CACHE_DIR, load_city, repo_stem, save_city
+from repoglyph.cache import load_city, repo_stem, save_city
 from repoglyph.geometry import BANNER_HEIGHT, BANNER_WIDTH
 from repoglyph.gitsource import CloneError, gather_city_from_path, git_available
 from repoglyph.models import filter_files
@@ -75,8 +75,7 @@ def build_parser() -> argparse.ArgumentParser:
         "repo",
         nargs="?",
         default=".",
-        help="path to a local git clone (default: the current directory); "
-        "with --from-cache, the cached repo label",
+        help="path to a local git clone (default: the current directory)",
     )
     parser.add_argument(
         "--commits",
@@ -86,20 +85,32 @@ def build_parser() -> argparse.ArgumentParser:
         help="how many recent commits light the windows (default: 50)",
     )
     parser.add_argument(
-        "--from-cache",
+        "--cache",
         action="store_true",
-        help=f"skip fetching; load structural data from {CACHE_DIR}/ (populated by a prior run)",
+        help="save the gathered repo data for --from-cache",
     )
     parser.add_argument(
-        "--no-cache",
+        "--from-cache",
         action="store_true",
-        help="do not write the structural data to the cache after fetching",
+        help="render from the cached snapshot without reading git",
+    )
+    parser.add_argument(
+        "--cache-dir",
+        default=None,
+        metavar="DIR",
+        help="cache location (default: <out-dir>)",
     )
     parser.add_argument(
         "--out",
         default=None,
         metavar="FILE",
-        help="output .svg path (default: output/<owner>_<repo>/<owner>_<repo>_<style>.svg)",
+        help="output .svg path (default: <out-dir>/<owner>_<repo>_<style>.svg)",
+    )
+    parser.add_argument(
+        "--out-dir",
+        default=None,
+        metavar="DIR",
+        help="folder for all outputs (default: <repo>/.glyph)",
     )
     parser.add_argument(
         "--size",
@@ -224,29 +235,39 @@ def main(argv: list[str] | None = None) -> int:
     except (ValueError, OSError) as error:
         parser.error(str(error))
 
+    out_dir = (
+        Path(args.out_dir)
+        if args.out_dir
+        else (Path(args.repo) if os.path.isdir(args.repo) else Path()) / ".glyph"
+    )
+    cache_dir = Path(args.cache_dir) if args.cache_dir else out_dir
     try:
         if args.from_cache:
-            data = load_city(args.repo)
+            data = load_city(cache_dir)
         else:
             if not git_available():
                 raise CloneError("git was not found on PATH")
             data = gather_city_from_path(args.repo, commit_window=args.commits)
-            if not args.no_cache:
-                save_city(data)
+            if args.cache:
+                save_city(data, cache_dir)
     except CloneError as error:
         print(f"error: {error}", file=sys.stderr)
         return 1
     except FileNotFoundError:
         print(
-            f"error: no cache for {args.repo}; run once without --from-cache first",
+            f"error: no cache in {cache_dir}; run once with --cache first",
             file=sys.stderr,
         )
+        return 1
+    except ValueError as error:
+        print(f"error: {error}", file=sys.stderr)
         return 1
 
     params = StyleParams(
         **{knob.name: getattr(args, knob.name) for knob in dataclasses.fields(StyleParams)}
     )
     skip_dirs = [d.strip() for d in args.skip_dirs.split(",") if d.strip()]
+    skip_dirs.append(".glyph")  # never draw our own output folder
     try:
         svg = render(
             data,
@@ -272,24 +293,22 @@ def main(argv: list[str] | None = None) -> int:
 
     # data.repo is the resolved label (slug, or a local path's derived name).
     safe_repo = repo_stem(data.repo)
-    out_path = (
-        Path(args.out) if args.out else Path("output") / safe_repo / f"{safe_repo}_{args.style}.svg"
-    )
+    out_path = Path(args.out) if args.out else out_dir / f"{safe_repo}_{args.style}.svg"
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(svg, encoding="utf-8")
 
     png_path = None if args.no_png else _write_png(out_path, scale=args.png_scale)
 
+    files, touches = filter_files(
+        data.files, data.touches, start_dir=args.start_dir, skip_dirs=skip_dirs
+    )
     okf_note = ""
     if args.okf is not None:
         okf_dir = Path(args.okf) if args.okf else out_path.parent / "okf"
-        files, touches = filter_files(
-            data.files, data.touches, start_dir=args.start_dir, skip_dirs=skip_dirs
-        )
         okf_data = dataclasses.replace(data, files=files, touches=touches)
         doc_count = write_okf_bundle(okf_data, okf_dir)
         okf_note = f" + {okf_dir}{os.sep} ({doc_count} docs)"
 
     wrote = str(out_path) + (f" + {png_path.name}" if png_path else "") + okf_note
-    print(f"wrote {wrote}  ({len(data.files)} buildings, {len(data.touches)} lit)")
+    print(f"wrote {wrote}  ({len(files)} buildings, {len(touches)} lit)")
     return 0
