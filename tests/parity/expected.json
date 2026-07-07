@@ -1,0 +1,601 @@
+{
+  "categorize": {
+    ".env": "other",
+    "prod.env": "conf",
+    "src/.env": "other",
+    "config/prod.env": "conf",
+    "..env": "other",
+    "main.py": "code",
+    "src/Main.PY": "code",
+    "README": "other",
+    "README.md": "docs",
+    "docs/guide.md": "docs",
+    "logo.png": "asset",
+    "archive.tar.gz": "other",
+    "pkg.v2/Makefile": "other",
+    "file.": "other",
+    ".github/workflows/ci.yml": "conf",
+    "a/b/c/deep.rs": "code"
+  },
+  "metrics": {
+    "file_count": 22,
+    "dir_count": 9,
+    "max_depth": 2,
+    "largest_district": "pkg",
+    "largest_district_share": 0.45454545454545453,
+    "modularity": 76
+  },
+  "balanced_cut": {
+    "6": [
+      ".github",
+      "docs",
+      "pkg/core",
+      "pkg/io",
+      "scripts",
+      "src"
+    ],
+    "14": [
+      ".github/workflows",
+      "docs",
+      "pkg/core",
+      "pkg/io",
+      "pkg/tests",
+      "scripts",
+      "src/api",
+      "src/ui"
+    ]
+  },
+  "oblique_layout": [
+    {
+      "district": ".github/workflows",
+      "x": 8,
+      "y": 3,
+      "files": [
+        ".github/workflows/ci.yml"
+      ]
+    },
+    {
+      "district": ".root",
+      "x": 2,
+      "y": 6,
+      "files": [
+        "logo.png"
+      ]
+    },
+    {
+      "district": ".root",
+      "x": 2,
+      "y": 7,
+      "files": [
+        "setup.py"
+      ]
+    },
+    {
+      "district": ".root",
+      "x": 3,
+      "y": 6,
+      "files": [
+        "README.md"
+      ]
+    },
+    {
+      "district": "docs",
+      "x": 5,
+      "y": 3,
+      "files": [
+        "docs/guide.md"
+      ]
+    },
+    {
+      "district": "docs",
+      "x": 6,
+      "y": 3,
+      "files": [
+        "docs/index.md"
+      ]
+    },
+    {
+      "district": "pkg/core",
+      "x": 0,
+      "y": 0,
+      "files": [
+        "pkg/core/engine.py"
+      ]
+    },
+    {
+      "district": "pkg/core",
+      "x": 0,
+      "y": 1,
+      "files": [
+        "pkg/core/utils.py"
+      ]
+    },
+    {
+      "district": "pkg/core",
+      "x": 1,
+      "y": 0,
+      "files": [
+        "pkg/core/parser.py"
+      ]
+    },
+    {
+      "district": "pkg/core",
+      "x": 1,
+      "y": 1,
+      "files": [
+        "pkg/core/config.json"
+      ]
+    },
+    {
+      "district": "pkg/io",
+      "x": 2,
+      "y": 0,
+      "files": [
+        "pkg/io/writer.py"
+      ]
+    },
+    {
+      "district": "pkg/io",
+      "x": 2,
+      "y": 1,
+      "files": [
+        "pkg/io/formats.py"
+      ]
+    },
+    {
+      "district": "pkg/io",
+      "x": 3,
+      "y": 0,
+      "files": [
+        "pkg/io/reader.py"
+      ]
+    },
+    {
+      "district": "pkg/tests",
+      "x": 4,
+      "y": 0,
+      "files": [
+        "pkg/tests/test_core.py"
+      ]
+    },
+    {
+      "district": "pkg/tests",
+      "x": 4,
+      "y": 1,
+      "files": [
+        "pkg/tests/fixtures.py"
+      ]
+    },
+    {
+      "district": "pkg/tests",
+      "x": 5,
+      "y": 0,
+      "files": [
+        "pkg/tests/test_io.py"
+      ]
+    },
+    {
+      "district": "scripts",
+      "x": 0,
+      "y": 6,
+      "files": [
+        "scripts/build.py"
+      ]
+    },
+    {
+      "district": "src/api",
+      "x": 2,
+      "y": 3,
+      "files": [
+        "src/api/routes.py"
+      ]
+    },
+    {
+      "district": "src/api",
+      "x": 3,
+      "y": 3,
+      "files": [
+        "src/api/models.py"
+      ]
+    },
+    {
+      "district": "src/ui",
+      "x": 0,
+      "y": 3,
+      "files": [
+        "src/ui/views.py"
+      ]
+    },
+    {
+      "district": "src/ui",
+      "x": 0,
+      "y": 4,
+      "files": [
+        "src/ui/home.py"
+      ]
+    },
+    {
+      "district": "src/ui",
+      "x": 1,
+      "y": 3,
+      "files": [
+        "src/ui/widgets.py"
+      ]
+    }
+  ],
+  "skyline_layout": [
+    {
+      "district": ".github/workflows",
+      "x": 0,
+      "y": 12,
+      "files": [
+        ".github/workflows/ci.yml"
+      ]
+    },
+    {
+      "district": ".root",
+      "x": 0,
+      "y": 9,
+      "files": [
+        "logo.png"
+      ]
+    },
+    {
+      "district": ".root",
+      "x": 0,
+      "y": 10,
+      "files": [
+        "setup.py"
+      ]
+    },
+    {
+      "district": ".root",
+      "x": 1,
+      "y": 9,
+      "files": [
+        "README.md"
+      ]
+    },
+    {
+      "district": "docs",
+      "x": 3,
+      "y": 9,
+      "files": [
+        "docs/guide.md"
+      ]
+    },
+    {
+      "district": "docs",
+      "x": 4,
+      "y": 9,
+      "files": [
+        "docs/index.md"
+      ]
+    },
+    {
+      "district": "pkg/core",
+      "x": 0,
+      "y": 0,
+      "files": [
+        "pkg/core/engine.py"
+      ]
+    },
+    {
+      "district": "pkg/core",
+      "x": 0,
+      "y": 1,
+      "files": [
+        "pkg/core/utils.py"
+      ]
+    },
+    {
+      "district": "pkg/core",
+      "x": 1,
+      "y": 0,
+      "files": [
+        "pkg/core/parser.py"
+      ]
+    },
+    {
+      "district": "pkg/core",
+      "x": 1,
+      "y": 1,
+      "files": [
+        "pkg/core/config.json"
+      ]
+    },
+    {
+      "district": "pkg/io",
+      "x": 0,
+      "y": 3,
+      "files": [
+        "pkg/io/writer.py"
+      ]
+    },
+    {
+      "district": "pkg/io",
+      "x": 0,
+      "y": 4,
+      "files": [
+        "pkg/io/formats.py"
+      ]
+    },
+    {
+      "district": "pkg/io",
+      "x": 1,
+      "y": 3,
+      "files": [
+        "pkg/io/reader.py"
+      ]
+    },
+    {
+      "district": "pkg/tests",
+      "x": 0,
+      "y": 6,
+      "files": [
+        "pkg/tests/test_core.py"
+      ]
+    },
+    {
+      "district": "pkg/tests",
+      "x": 0,
+      "y": 7,
+      "files": [
+        "pkg/tests/fixtures.py"
+      ]
+    },
+    {
+      "district": "pkg/tests",
+      "x": 1,
+      "y": 6,
+      "files": [
+        "pkg/tests/test_io.py"
+      ]
+    },
+    {
+      "district": "scripts",
+      "x": 2,
+      "y": 12,
+      "files": [
+        "scripts/build.py"
+      ]
+    },
+    {
+      "district": "src/api",
+      "x": 3,
+      "y": 3,
+      "files": [
+        "src/api/routes.py"
+      ]
+    },
+    {
+      "district": "src/api",
+      "x": 4,
+      "y": 3,
+      "files": [
+        "src/api/models.py"
+      ]
+    },
+    {
+      "district": "src/ui",
+      "x": 3,
+      "y": 0,
+      "files": [
+        "src/ui/views.py"
+      ]
+    },
+    {
+      "district": "src/ui",
+      "x": 3,
+      "y": 1,
+      "files": [
+        "src/ui/home.py"
+      ]
+    },
+    {
+      "district": "src/ui",
+      "x": 4,
+      "y": 0,
+      "files": [
+        "src/ui/widgets.py"
+      ]
+    }
+  ],
+  "highrise_layout": [
+    {
+      "district": ".github/workflows",
+      "x": 3,
+      "y": 9,
+      "floors": [
+        {
+          "name": "",
+          "rows": 1,
+          "files": [
+            ".github/workflows/ci.yml"
+          ]
+        }
+      ]
+    },
+    {
+      "district": ".root",
+      "x": 6,
+      "y": 6,
+      "floors": [
+        {
+          "name": "",
+          "rows": 1,
+          "files": [
+            "README.md",
+            "setup.py",
+            "logo.png"
+          ]
+        }
+      ]
+    },
+    {
+      "district": "docs",
+      "x": 0,
+      "y": 9,
+      "floors": [
+        {
+          "name": "",
+          "rows": 1,
+          "files": [
+            "docs/index.md",
+            "docs/guide.md"
+          ]
+        }
+      ]
+    },
+    {
+      "district": "pkg/core",
+      "x": 0,
+      "y": 0,
+      "floors": [
+        {
+          "name": "",
+          "rows": 2,
+          "files": [
+            "pkg/core/engine.py",
+            "pkg/core/parser.py",
+            "pkg/core/utils.py",
+            "pkg/core/config.json"
+          ]
+        }
+      ]
+    },
+    {
+      "district": "pkg/io",
+      "x": 3,
+      "y": 0,
+      "floors": [
+        {
+          "name": "",
+          "rows": 1,
+          "files": [
+            "pkg/io/reader.py",
+            "pkg/io/writer.py",
+            "pkg/io/formats.py"
+          ]
+        }
+      ]
+    },
+    {
+      "district": "pkg/tests",
+      "x": 0,
+      "y": 3,
+      "floors": [
+        {
+          "name": "",
+          "rows": 1,
+          "files": [
+            "pkg/tests/test_core.py",
+            "pkg/tests/test_io.py",
+            "pkg/tests/fixtures.py"
+          ]
+        }
+      ]
+    },
+    {
+      "district": "scripts",
+      "x": 6,
+      "y": 9,
+      "floors": [
+        {
+          "name": "",
+          "rows": 1,
+          "files": [
+            "scripts/build.py"
+          ]
+        }
+      ]
+    },
+    {
+      "district": "src/api",
+      "x": 0,
+      "y": 6,
+      "floors": [
+        {
+          "name": "",
+          "rows": 1,
+          "files": [
+            "src/api/routes.py",
+            "src/api/models.py"
+          ]
+        }
+      ]
+    },
+    {
+      "district": "src/ui",
+      "x": 3,
+      "y": 6,
+      "floors": [
+        {
+          "name": "",
+          "rows": 1,
+          "files": [
+            "src/ui/home.py",
+            "src/ui/views.py",
+            "src/ui/widgets.py"
+          ]
+        }
+      ]
+    }
+  ],
+  "palettes": {
+    "neon": {
+      "code": [
+        "#3fae93",
+        "#15564a",
+        "#247d6b"
+      ],
+      "conf": [
+        "#c9a23f",
+        "#7a5210",
+        "#a87c1f"
+      ],
+      "docs": [
+        "#74ab4f",
+        "#314f1c",
+        "#4f7d30"
+      ],
+      "asset": [
+        "#9a5fc7",
+        "#46236a",
+        "#6e3a9e"
+      ],
+      "other": [
+        "#7d90a3",
+        "#2f3a47",
+        "#4d5d6d"
+      ]
+    },
+    "light": {
+      "code": [
+        "#3dad94",
+        "#1c6457",
+        "#2c8674"
+      ],
+      "conf": [
+        "#d39e3a",
+        "#8a601a",
+        "#b1822a"
+      ],
+      "docs": [
+        "#6fb352",
+        "#3c6628",
+        "#52883a"
+      ],
+      "asset": [
+        "#9968c9",
+        "#523080",
+        "#7548a4"
+      ],
+      "other": [
+        "#7d8ea0",
+        "#3c4854",
+        "#5a6a78"
+      ]
+    }
+  }
+}

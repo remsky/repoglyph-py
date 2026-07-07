@@ -1,0 +1,113 @@
+from __future__ import annotations
+
+from pathlib import Path
+
+from repoglyph.models import CityData, SourceFile
+from repoglyph.okf import build_okf_bundle, write_okf_bundle
+
+
+def _city() -> CityData:
+    files = [
+        SourceFile("src/app.py", size=50_000),
+        SourceFile("src/util.py", size=500),
+        SourceFile("docs/guide.md", size=200),
+        SourceFile("index/config.yml", size=10),
+        SourceFile("README.md", size=100),
+    ]
+    touches = {"src/app.py": 120, "docs/guide.md": 4, "gone/old.py": 9}
+    return CityData(
+        repo="owner/repo",
+        files=files,
+        touches=touches,
+        commit_window=50,
+        head_sha="abc1234def5678",
+    )
+
+
+def _frontmatter_of(doc: str) -> str:
+    assert doc.startswith("---\n")
+    return doc.split("\n---\n", 1)[0]
+
+
+def test_every_concept_has_typed_frontmatter() -> None:
+    bundle = build_okf_bundle(_city())
+    for path, doc in bundle.items():
+        name = Path(path).stem
+        if name in {"index", "log"}:
+            assert not doc.startswith("---"), f"{path} is reserved and must have no frontmatter"
+        else:
+            assert "type: " in _frontmatter_of(doc), f"{path} is missing a type"
+
+
+def test_repository_doc_contents() -> None:
+    doc = build_okf_bundle(_city())["repository.md"]
+    assert 'type: "Repository"' in doc
+    assert 'resource: "https://github.com/owner/repo"' in doc
+    assert "modularity" in doc
+    assert "[src](/districts/src.md)" in doc
+
+
+def test_reserved_district_name_is_renamed() -> None:
+    bundle = build_okf_bundle(_city())
+    assert "districts/index-district.md" in bundle
+    assert "[index](/districts/index-district.md)" in bundle["index.md"]
+
+
+def test_root_files_district_slug() -> None:
+    bundle = build_okf_bundle(_city())
+    assert "districts/root.md" in bundle
+    assert "Files at the repository root." in bundle["districts/root.md"]
+
+
+def test_hotspots_ranked_and_flagged() -> None:
+    doc = build_okf_bundle(_city())["hotspots.md"]
+    ranked_rows = [line for line in doc.splitlines() if line.startswith("| `")]
+    assert ranked_rows[0].startswith("| `src/app.py` | 120 |")
+    assert "removed at HEAD" in doc  # gone/old.py is not in the tree
+    assert "# Oversized source files" in doc  # app.py is over the 40 KB threshold
+
+
+def test_district_files_inventory() -> None:
+    doc = build_okf_bundle(_city())["districts/src.md"]
+    assert "# Files" in doc
+    assert "Complete inventory: 2 files." in doc
+    assert "**`src/`**" in doc
+    assert "- `app.py` (48.8 KB)" in doc
+    assert "- `util.py` (500 B)" in doc
+
+
+def test_root_district_inventory_label() -> None:
+    doc = build_okf_bundle(_city())["districts/root.md"]
+    assert "**repository root**" in doc
+    assert "- `README.md` (100 B)" in doc
+
+
+def test_district_files_inventory_truncates() -> None:
+    files = [SourceFile(f"big/f{i:04}.py", size=10) for i in range(250)]
+    doc = build_okf_bundle(CityData(repo="o/r", files=files))["districts/big.md"]
+    assert "First 200 of 250 files, sorted by path." in doc
+    assert "- `f0199.py` (10 B)" in doc
+    assert "`f0200.py`" not in doc
+    assert "(50 more not shown; run `git ls-tree -r HEAD` for the full tree.)" in doc
+
+
+def test_bundle_is_deterministic() -> None:
+    assert build_okf_bundle(_city()) == build_okf_bundle(_city())
+
+
+def test_write_clears_stale_districts(tmp_path: Path) -> None:
+    stale = tmp_path / "districts" / "old-name.md"
+    stale.parent.mkdir(parents=True)
+    stale.write_text("---\ntype: Directory\n---\n", encoding="utf-8")
+
+    count = write_okf_bundle(_city(), tmp_path)
+
+    assert count == len(list(tmp_path.rglob("*.md")))
+    assert not stale.exists()
+    assert (tmp_path / "repository.md").exists()
+
+
+def test_empty_repo_does_not_crash() -> None:
+    bundle = build_okf_bundle(CityData(repo="o/r"))
+    assert "repository.md" in bundle
+    assert "districts/index.md" not in bundle

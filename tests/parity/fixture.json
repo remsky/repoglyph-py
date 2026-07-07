@@ -1,0 +1,51 @@
+{
+  "files": [
+    { "path": "pkg/core/engine.py", "size": 8400 },
+    { "path": "pkg/core/parser.py", "size": 5100 },
+    { "path": "pkg/core/utils.py", "size": 2300 },
+    { "path": "pkg/core/config.json", "size": 600 },
+    { "path": "pkg/io/reader.py", "size": 3900 },
+    { "path": "pkg/io/writer.py", "size": 4200 },
+    { "path": "pkg/io/formats.py", "size": 1700 },
+    { "path": "pkg/tests/test_core.py", "size": 2800 },
+    { "path": "pkg/tests/test_io.py", "size": 2100 },
+    { "path": "pkg/tests/fixtures.py", "size": 900 },
+    { "path": "src/ui/home.py", "size": 1500 },
+    { "path": "src/ui/views.py", "size": 2200 },
+    { "path": "src/ui/widgets.py", "size": 1800 },
+    { "path": "src/api/routes.py", "size": 2600 },
+    { "path": "src/api/models.py", "size": 1400 },
+    { "path": "docs/index.md", "size": 1200 },
+    { "path": "docs/guide.md", "size": 2600 },
+    { "path": "scripts/build.py", "size": 700 },
+    { "path": ".github/workflows/ci.yml", "size": 450 },
+    { "path": "README.md", "size": 1500 },
+    { "path": "setup.py", "size": 800 },
+    { "path": "logo.png", "size": 42000 }
+  ],
+  "touches": {
+    "pkg/core/engine.py": 9,
+    "pkg/io/writer.py": 4,
+    "pkg/tests/test_core.py": 2,
+    "src/api/routes.py": 3,
+    "README.md": 1
+  },
+  "categorize_cases": [
+    ".env",
+    "prod.env",
+    "src/.env",
+    "config/prod.env",
+    "..env",
+    "main.py",
+    "src/Main.PY",
+    "README",
+    "README.md",
+    "docs/guide.md",
+    "logo.png",
+    "archive.tar.gz",
+    "pkg.v2/Makefile",
+    "file.",
+    ".github/workflows/ci.yml",
+    "a/b/c/deep.rs"
+  ]
+}

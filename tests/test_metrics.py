@@ -1,0 +1,52 @@
+from __future__ import annotations
+
+from repoglyph.metrics import FINDINGS, OVERSIZED_FILE_BYTES, STATS, compute_metrics
+from repoglyph.models import CityData, SourceFile
+
+
+def _city(**kwargs) -> CityData:
+    files = [
+        SourceFile("src/app.py", size=1_000),
+        SourceFile("src/util.py", size=500),
+        SourceFile("docs/guide.md", size=200),
+        SourceFile("README.md", size=100),
+    ]
+    return CityData(repo="o/r", files=files, **kwargs)
+
+
+def test_basic_counts() -> None:
+    metrics = compute_metrics(_city())
+    assert metrics.file_count == 4
+    assert metrics.max_depth == 1
+    assert metrics.largest_district == "src"
+    assert metrics.contributor_count == 0
+
+
+def test_modularity_is_bounded() -> None:
+    metrics = compute_metrics(_city())
+    assert 0 <= metrics.modularity <= 100
+
+
+def test_empty_repo_does_not_crash() -> None:
+    metrics = compute_metrics(CityData(repo="o/r"))
+    assert metrics.file_count == 0
+    assert metrics.largest_district == ""
+    assert metrics.modularity >= 0
+
+
+def test_registered_stats_compute() -> None:
+    data = _city()
+    metrics = compute_metrics(data)
+    values = {stat.key: stat.compute(data, metrics) for stat in STATS}
+    assert values["files"] == "4"
+    assert values["largest_district"] == "src, 50% of files"
+    assert all(value is None or isinstance(value, str) for value in values.values())
+
+
+def test_oversized_files_finding() -> None:
+    data = _city()
+    data.files.append(SourceFile("src/huge.py", size=OVERSIZED_FILE_BYTES + 1))
+    (finding,) = [f for f in FINDINGS if f.key == "oversized_files"]
+    rows = finding.compute(data)
+    assert rows == [("`src/huge.py`", "39.1 KB")]
+    assert len(finding.columns) == len(rows[0])
