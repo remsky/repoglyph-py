@@ -66,7 +66,7 @@ repository and hotspot summaries, and one file per district.
 uv sync
 uv run pytest
 uv run ruff check src tests
-prek install   # pre-commit hook: refreshes the README badges
+prek install   # pre-commit hooks: refresh the README badges, banner, and OKF bundle
 ```
 
 ## License

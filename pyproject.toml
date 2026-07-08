@@ -45,6 +45,7 @@ only-include = ["src/repoglyph"]
 [dependency-groups]
 dev = [
     "pytest>=8",
+    "pytest-cov>=6",
     "resvg-py>=0.3.3",
 ]
 

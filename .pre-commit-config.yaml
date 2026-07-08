@@ -7,3 +7,9 @@ repos:
         language: system
         pass_filenames: false
         always_run: true
+      - id: repoglyph-outputs
+        name: refresh the README banner + OKF bundle
+        entry: uv run python scripts/update_glyph.py
+        language: system
+        pass_filenames: false
+        always_run: true

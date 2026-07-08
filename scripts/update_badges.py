@@ -12,7 +12,7 @@ README = Path(__file__).resolve().parents[1] / "README.md"
 
 def main() -> int:
     result = subprocess.run(
-        ["uv", "run", "--with", "pytest-cov", "pytest", "--cov=repoglyph", "tests"],
+        ["uv", "run", "pytest", "--cov=repoglyph", "tests"],
         capture_output=True,
         text=True,
         cwd=README.parent,
