@@ -1,11 +1,11 @@
-# <img src="assets/logo.svg" width="28" height="28" alt=""> repoglyph
+# <img src="https://raw.githubusercontent.com/remsky/repoglyph-py/main/assets/logo.svg" width="28" height="28" alt=""> repoglyph
 
-[![OKF](https://img.shields.io/badge/bundle-OKF-0d1c17?labelColor=4c566a&logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI%2BPGcgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNWVmMmQwIiBzdHJva2Utd2lkdGg9IjIuMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNNiAyaDhsNCA0djE2SDZ6Ii8%2BPHBhdGggZD0iTTE0IDJ2NGg0Ii8%2BPHBhdGggZD0iTTkgOWgyLjVNMTMuNSA5SDE2Ii8%2BPHBhdGggZD0iTTkgMTMuNWg3TTkgMTcuNWg0LjUiLz48L2c%2BPC9zdmc%2BCg%3D%3D)](.glyph/okf/index.md)
+[![OKF](https://img.shields.io/badge/bundle-OKF-0d1c17?labelColor=4c566a&logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI%2BPGcgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNWVmMmQwIiBzdHJva2Utd2lkdGg9IjIuMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNNiAyaDhsNCA0djE2SDZ6Ii8%2BPHBhdGggZD0iTTE0IDJ2NGg0Ii8%2BPHBhdGggZD0iTTkgOWgyLjVNMTMuNSA5SDE2Ii8%2BPHBhdGggZD0iTTkgMTMuNWg3TTkgMTcuNWg0LjUiLz48L2c%2BPC9zdmc%2BCg%3D%3D)](https://github.com/remsky/repoglyph-py/blob/main/.glyph/okf/index.md)
 
 ![tests](https://img.shields.io/badge/tests-88-5ef2d0)
 ![coverage](https://img.shields.io/badge/coverage-86%25-5ef2d0)
 
-![repoglyph banner](assets/banner.png)
+![repoglyph banner](https://raw.githubusercontent.com/remsky/repoglyph-py/main/assets/banner.png)
 
 Isometric repo-city banners from a local git clone. Each file is a building:
 size drives height, type drives color, recent commits light windows.

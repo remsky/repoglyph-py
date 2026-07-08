@@ -4,7 +4,7 @@ title: ".root"
 description: "Files at the repository root."
 tags: ["repoglyph", "district"]
 files: 8
-bytes: 18816
+bytes: 18983
 ---
 
 # Stats
@@ -12,16 +12,16 @@ bytes: 18816
 | metric | value |
 | --- | --- |
 | files | 8 (11% of the repo) |
-| bytes | 18.4 KB |
+| bytes | 18.5 KB |
 | max depth | 0 |
-| recent churn | 667 lines (9% of the window) |
+| recent churn | 670 lines (9% of the window) |
 
 # Largest files
 
 | file | size | category |
 | --- | --- | --- |
 | `LICENSE` | 11.1 KB | other |
-| `README.md` | 3.6 KB | docs |
+| `README.md` | 3.7 KB | docs |
 | `pyproject.toml` | 1.6 KB | conf |
 | `CONTRIBUTING.md` | 1.4 KB | docs |
 | `.pre-commit-config.yaml` | 472 B | conf |
@@ -33,7 +33,7 @@ bytes: 18816
 
 | file | lines changed |
 | --- | --- |
-| `README.md` | 296 |
+| `README.md` | 299 |
 | `LICENSE` | 202 |
 | `pyproject.toml` | 61 |
 | `CONTRIBUTING.md` | 57 |
@@ -54,7 +54,7 @@ Complete inventory: 8 files.
 - `CONTRIBUTING.md` (1.4 KB)
 - `LICENSE` (11.1 KB)
 - `NOTICE` (32 B)
-- `README.md` (3.6 KB)
+- `README.md` (3.7 KB)
 - `pyproject.toml` (1.6 KB)
 
 Context: [repository overview](../repository.md).

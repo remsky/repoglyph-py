@@ -3,7 +3,7 @@ name: repoglyph
 description: Generate isometric repo-city banners and OKF structural context bundles from a local git clone with the repoglyph CLI. Use when the user wants a repo banner image, a codebase map, an agent-readable repo summary, or a self-updating repo-map skill.
 ---
 
-# <img src="assets/logo.svg" width="28" height="28" alt=""> repoglyph
+# <img src="https://raw.githubusercontent.com/remsky/repoglyph-py/main/assets/logo.svg" width="28" height="28" alt=""> repoglyph
 
 Isometric repo-city banners from a local git clone. Each file is a building:
 size drives height, type drives color, recent commits light windows.

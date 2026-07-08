@@ -15,7 +15,7 @@ tags: ["repoglyph", "churn"]
 | `src/repoglyph/render/scene.py` | 392 | 13.2 KB | [src/repoglyph/render](districts/src-repoglyph-render.md) |
 | `src/repoglyph/cli.py` | 391 | 11.0 KB | [src/repoglyph](districts/src-repoglyph.md) |
 | `src/repoglyph/render/highrise.py` | 389 | 13.9 KB | [src/repoglyph/render](districts/src-repoglyph-render.md) |
-| `README.md` | 296 | 3.6 KB | [.root](districts/root.md) |
+| `README.md` | 299 | 3.7 KB | [.root](districts/root.md) |
 | `src/repoglyph/render/overlay.py` | 246 | 8.3 KB | [src/repoglyph/render](districts/src-repoglyph-render.md) |
 | `src/repoglyph/render/oblique.py` | 226 | 6.9 KB | [src/repoglyph/render](districts/src-repoglyph-render.md) |
 | `src/repoglyph/render/compose.py` | 215 | 7.5 KB | [src/repoglyph/render](districts/src-repoglyph-render.md) |
@@ -30,6 +30,6 @@ tags: ["repoglyph", "churn"]
 | `src/repoglyph/render/logo.py` | 132 | 5.0 KB | [src/repoglyph/render](districts/src-repoglyph-render.md) |
 | `src/repoglyph/render/styles.py` | 131 | 4.7 KB | [src/repoglyph/render](districts/src-repoglyph-render.md) |
 
-(50 more touched files not shown.)
+(51 more touched files not shown.)
 
 Context: [repository overview](repository.md).
