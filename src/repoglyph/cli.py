@@ -13,7 +13,7 @@ from repoglyph import __version__
 from repoglyph.cache import load_city, repo_stem, save_city
 from repoglyph.geometry import BANNER_HEIGHT, BANNER_WIDTH
 from repoglyph.gitsource import CloneError, gather_city_from_path, git_available
-from repoglyph.models import filter_files
+from repoglyph.models import filter_files, skip_commons
 from repoglyph.okf import write_okf_bundle
 from repoglyph.palettes import PALETTES, resolve_palette
 from repoglyph.render import (
@@ -48,7 +48,7 @@ def _write_png(svg_path: Path, *, scale: float) -> Path | None:
     try:
         import resvg_py
     except ImportError:
-        logger.info("png: resvg-py not installed; wrote SVG only (uv sync to enable PNG)")
+        logger.info("png: resvg-py not installed; wrote SVG only (pip install repoglyph[png])")
         return None
     try:
         png = resvg_py.svg_to_bytes(
@@ -183,6 +183,11 @@ def build_parser() -> argparse.ArgumentParser:
         help="comma-separated directories to omit, e.g. tests,docs",
     )
     parser.add_argument(
+        "--skip-commons",
+        action="store_true",
+        help="omit common machine-generated files (lockfiles) from the city",
+    )
+    parser.add_argument(
         "--palette",
         default="light",
         metavar="NAME|FILE",
@@ -262,6 +267,10 @@ def main(argv: list[str] | None = None) -> int:
     except ValueError as error:
         print(f"error: {error}", file=sys.stderr)
         return 1
+
+    if args.skip_commons:
+        lean_files, lean_touches = skip_commons(data.files, data.touches)
+        data = dataclasses.replace(data, files=lean_files, touches=lean_touches)
 
     params = StyleParams(
         **{knob.name: getattr(args, knob.name) for knob in dataclasses.fields(StyleParams)}

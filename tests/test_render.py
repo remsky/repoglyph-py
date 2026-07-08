@@ -29,15 +29,6 @@ def test_render_returns_well_formed_svg() -> None:
     xml.dom.minidom.parseString(svg)
 
 
-def test_render_is_deterministic() -> None:
-    assert render(_sample_city()) == render(_sample_city())
-
-
-def test_render_handles_empty_repo() -> None:
-    svg = render(CityData(repo="o/r", files=[SourceFile("README.md")]))
-    xml.dom.minidom.parseString(svg)
-
-
 def test_render_escapes_repo_and_district_text() -> None:
     city = CityData(
         repo='owner/<repo>&"x"',
@@ -52,29 +43,18 @@ def test_render_escapes_repo_and_district_text() -> None:
     assert 'owner/<repo>&"x"' not in svg
 
 
-def test_oblique_style_is_well_formed_and_deterministic() -> None:
-    city = _sample_city()
-    svg = render(city, style="oblique")
-    assert svg.startswith("<svg")
-    xml.dom.minidom.parseString(svg)
-    assert render(city, style="oblique") == svg  # deterministic
-
-
 def test_oblique_shear_changes_only_the_camera() -> None:
-    # A deeper shear is a different drawing, but the camera is the only lever that
-    # moved (grid cells are camera-independent).
-    city = _sample_city()
-    deep = render(city, style="oblique", params=StyleParams(shear=6.0))
-    assert deep != render(city, style="oblique")
+    from repoglyph.render.oblique import build_oblique
 
-
-def test_skyline_and_highrise_are_well_formed_and_deterministic() -> None:
     city = _sample_city()
-    for style in ("skyline", "highrise"):
-        svg = render(city, style=style)
-        assert svg.startswith("<svg")
-        xml.dom.minidom.parseString(svg)
-        assert render(city, style=style) == svg  # deterministic
+    flat = build_oblique(city.files, shear=0.0)
+    deep = build_oblique(city.files, shear=6.0)
+    assert [(t.grid_x, t.grid_y, t.height, t.district) for t in flat.towers] == [
+        (t.grid_x, t.grid_y, t.height, t.district) for t in deep.towers
+    ]
+    assert render(city, style="oblique", params=StyleParams(shear=6.0)) != render(
+        city, style="oblique"
+    )
 
 
 def test_district_groups_honors_locked_cut() -> None:

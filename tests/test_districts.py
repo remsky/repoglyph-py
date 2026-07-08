@@ -5,31 +5,19 @@ from __future__ import annotations
 import pytest
 
 from repoglyph.models import SourceFile
-from repoglyph.render.districts import (
-    _DISTRICT_CAP,
-    _DISTRICT_SPLIT,
-    _balanced_cut,
-    _district_cut,
-    district_cut,
-)
+from repoglyph.render.districts import district_cut
 from repoglyph.render.scene import build_voxel
 
 
-def test_balanced_cut_is_deterministic_and_pure() -> None:
-    # Same file list gives equal cuts; repeated calls are equal (pure function).
+def test_balanced_cut_exact_result_for_small_tree() -> None:
     files = [
         SourceFile("pkg/core/a.py", size=100),
         SourceFile("pkg/io/b.py", size=120),
         SourceFile("pkg/tests/c.py", size=90),
         SourceFile("docs/intro.md", size=50),
     ]
-    scene_a = build_voxel(files)
-    scene_b = build_voxel(list(files))
-
-    assert _balanced_cut(scene_a, _DISTRICT_CAP) == _balanced_cut(scene_b, _DISTRICT_CAP)
-    assert _balanced_cut(scene_a, _DISTRICT_CAP) == _balanced_cut(scene_a, _DISTRICT_CAP)
-    assert district_cut(scene_a, method="balanced") == district_cut(scene_b, method="balanced")
-    assert district_cut(scene_a, method="balanced") == _balanced_cut(scene_a, _DISTRICT_CAP)
+    cut = district_cut(build_voxel(files), method="balanced")
+    assert cut == {"pkg/core", "pkg/io", "pkg/tests", "docs"}
 
 
 def test_balanced_cut_peels_an_oversized_container() -> None:
@@ -93,16 +81,40 @@ def test_balanced_cut_tie_breaks_by_path_ascending() -> None:
     assert len(cut) <= 4
 
 
-def test_district_cut_adaptive_dispatch_parity() -> None:
-    files = [
-        SourceFile("alpha/one.py", size=100),
-        SourceFile("alpha/two.py", size=200),
-        SourceFile("beta/three.py", size=150),
-        SourceFile("beta/sub/four.py", size=120),
-        SourceFile("gamma/five.py", size=90),
-    ]
+def test_balanced_cut_keeps_split_dir_with_loose_files() -> None:
+    files = (
+        [SourceFile(f"pkg/core/c{i}.py", size=100) for i in range(5)]
+        + [SourceFile(f"pkg/io/i{i}.py", size=100) for i in range(5)]
+        + [SourceFile(f"pkg/loose{i}.py", size=100) for i in range(4)]
+        + [SourceFile("docs/intro.md", size=50)]
+    )
     scene = build_voxel(files)
-    assert district_cut(scene, method="adaptive") == _district_cut(scene, _DISTRICT_SPLIT)
+    cut = district_cut(scene, method="balanced")
+
+    assert {"pkg/core", "pkg/io"} <= cut
+    assert "pkg" in cut
+    assert "docs" in cut
+
+
+def test_adaptive_cut_splits_only_past_the_threshold() -> None:
+    # pkg/ is 10/18 files (over 0.35) so adaptive splits it; src/ at 5/18 stays whole.
+    files = (
+        [SourceFile(f"pkg/core/c{i}.py", size=100) for i in range(4)]
+        + [SourceFile(f"pkg/io/i{i}.py", size=100) for i in range(3)]
+        + [SourceFile(f"pkg/tests/t{i}.py", size=100) for i in range(3)]
+        + [SourceFile(f"src/ui/u{i}.py", size=100) for i in range(3)]
+        + [SourceFile(f"src/api/a{i}.py", size=100) for i in range(2)]
+        + [SourceFile("docs/intro.md", size=50), SourceFile("docs/guide.md", size=60)]
+        + [SourceFile("scripts/run.sh", size=40)]
+    )
+    scene = build_voxel(files)
+
+    adaptive = district_cut(scene, method="adaptive")
+    assert adaptive == {"pkg/core", "pkg/io", "pkg/tests", "src", "docs", "scripts"}
+
+    balanced = district_cut(scene, method="balanced")
+    assert {"src/ui", "src/api"} <= balanced
+    assert "src" not in balanced
 
 
 def test_district_cut_unknown_method_raises() -> None:

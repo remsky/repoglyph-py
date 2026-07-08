@@ -68,6 +68,11 @@ name = "repoglyph"
 version = "0.1.0"
 source = { editable = "." }
 
+[package.optional-dependencies]
+png = [
+    { name = "resvg-py" },
+]
+
 [package.dev-dependencies]
 dev = [
     { name = "pytest" },
@@ -75,6 +80,8 @@ dev = [
 ]
 
 [package.metadata]
+requires-dist = [{ name = "resvg-py", marker = "extra == 'png'", specifier = ">=0.3.3" }]
+provides-extras = ["png"]
 
 [package.metadata.requires-dev]
 dev = [

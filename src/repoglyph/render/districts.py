@@ -99,23 +99,31 @@ def _balanced_cut(scene: _HasTowers, cap: int) -> set[str]:
             children.setdefault(prefix.rsplit("/", 1)[0], set()).add(prefix)
 
     frontier: set[str] = {prefix for prefix in counts if "/" not in prefix}
+    weight = dict(counts)
+    split: set[str] = set()
     while len(frontier) < cap:
-        mean = sum(counts[f] for f in frontier) / len(frontier)
-        candidates = [f for f in frontier if children.get(f) and counts[f] > mean]
+        mean = sum(weight[f] for f in frontier) / len(frontier)
+        splittable = [f for f in frontier if f not in split and children.get(f)]
+        candidates = [f for f in splittable if weight[f] > mean]
         if not candidates:
             # Frontier must not halt while budget remains; fall back to any splittable node.
-            candidates = [f for f in frontier if children.get(f)]
+            candidates = splittable
             if not candidates:
                 break
-        target = sorted(candidates, key=lambda p: (-counts[p], p))[0]
+        target = sorted(candidates, key=lambda p: (-weight[p], p))[0]
         kids = children[target]
-        budget = cap - (len(frontier) - 1)  # slots free after removing the target
+        direct = counts[target] - sum(counts[kid] for kid in kids)
+        budget = cap - len(frontier) + (0 if direct > 0 else 1)
+        if direct > 0:
+            weight[target] = direct
+            split.add(target)
+        else:
+            frontier = frontier - {target}
         if len(kids) <= budget:
-            frontier = (frontier - {target}) | kids
+            frontier |= kids
         else:
             # Too many children to fit; keep only the largest that fit.
-            keep = sorted(kids, key=lambda p: (-counts[p], p))[:budget]
-            frontier = (frontier - {target}) | set(keep)
+            frontier |= set(sorted(kids, key=lambda p: (-counts[p], p))[:budget])
             break
     return frontier
 

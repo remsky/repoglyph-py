@@ -5,10 +5,27 @@ from __future__ import annotations
 from collections.abc import Iterable
 from dataclasses import dataclass, field
 
-__all__ = ["SourceFile", "CityData", "group_by_district", "filter_files"]
+__all__ = ["SourceFile", "CityData", "group_by_district", "filter_files", "skip_commons"]
 
 #: District name used for files that live at the repository root.
 ROOT_DISTRICT = ".root"
+
+#: Machine-generated files dropped by --skip-commons.
+COMMON_GENERATED = frozenset(
+    {
+        "uv.lock",
+        "poetry.lock",
+        "package-lock.json",
+        "yarn.lock",
+        "pnpm-lock.yaml",
+        "bun.lockb",
+        "cargo.lock",
+        "gemfile.lock",
+        "composer.lock",
+        "go.sum",
+        "flake.lock",
+    }
+)
 
 
 @dataclass(slots=True)
@@ -111,3 +128,20 @@ def filter_files(
     out_files = [SourceFile(keep[f.path], f.size) for f in files if f.path in keep]
     out_touches = {keep[p]: count for p, count in touches.items() if p in keep}
     return out_files, out_touches
+
+
+def skip_commons(
+    files: list[SourceFile], touches: dict[str, int]
+) -> tuple[list[SourceFile], dict[str, int]]:
+    """Drop ``COMMON_GENERATED`` files from *files* and *touches*.
+
+    Returns the inputs unchanged when the result would be empty.
+    """
+
+    def common(path: str) -> bool:
+        return path.rpartition("/")[2].lower() in COMMON_GENERATED
+
+    kept = [f for f in files if not common(f.path)]
+    if not kept:
+        return files, touches
+    return kept, {p: c for p, c in touches.items() if not common(p)}

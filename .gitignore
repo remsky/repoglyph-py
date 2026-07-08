@@ -13,5 +13,7 @@ dist/
 .pytest_cache/
 .ruff_cache/
 
-# Generated banners
-.glyph/
+# Generated banners (the OKF bundle stays tracked as a living sample)
+.glyph/*
+!.glyph/okf/
+.coverage

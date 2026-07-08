@@ -1,0 +1,9 @@
+repos:
+  - repo: local
+    hooks:
+      - id: readme-badges
+        name: refresh README badges
+        entry: uv run python scripts/update_badges.py
+        language: system
+        pass_filenames: false
+        always_run: true

@@ -22,9 +22,11 @@ def test_basic_counts() -> None:
     assert metrics.contributor_count == 0
 
 
-def test_modularity_is_bounded() -> None:
-    metrics = compute_metrics(_city())
-    assert 0 <= metrics.modularity <= 100
+def test_modularity_exact_score_and_floor_clamp() -> None:
+    # 100 * (1 - 0.5 * 0.5) * (1 - (1000 / 40000) * 0.04) = 74.925 -> 74
+    assert compute_metrics(_city()).modularity == 74
+    giant = CityData(repo="o/r", files=[SourceFile("src/mega.py", size=2_000_000)])
+    assert compute_metrics(giant).modularity == 0
 
 
 def test_empty_repo_does_not_crash() -> None:

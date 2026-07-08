@@ -21,10 +21,9 @@ def _city() -> CityData:
     )
 
 
-def test_default_palette_is_neon_and_matches_category_colors() -> None:
-    assert DEFAULT_PALETTE == "neon"
+def test_default_palette_resolves_to_neon_colors() -> None:
     assert resolve_palette(None).colors == CATEGORY_COLORS
-    assert resolve_palette("neon").colors == CATEGORY_COLORS
+    assert resolve_palette(DEFAULT_PALETTE).colors == CATEGORY_COLORS
 
 
 def test_builtins_cover_every_category() -> None:

@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from repoglyph.geometry import (
     HEIGHT_CAP,
+    TILE_H,
+    TILE_W,
     Scene,
     building_height,
     fit_banner,
@@ -9,14 +11,11 @@ from repoglyph.geometry import (
 )
 
 
-def test_iso_is_linear_and_centered() -> None:
+def test_iso_projects_grid_axes_exactly() -> None:
     assert iso(0, 0) == (0, 0)
-    # Projection is linear: scaling the grid input scales the screen output.
-    x1, y1 = iso(1, 2)
-    x2, y2 = iso(2, 4)
-    assert (x2, y2) == (2 * x1, 2 * y1)
-    # The two grid axes map to distinct screen directions.
-    assert iso(1, 0) != iso(0, 1)
+    assert iso(1, 0) == (TILE_W, TILE_H)
+    assert iso(0, 1) == (-TILE_W, TILE_H)
+    assert iso(1, 1) == (0, 2 * TILE_H)
 
 
 def test_building_height_is_capped() -> None:

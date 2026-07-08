@@ -26,6 +26,9 @@ Homepage = "https://repoglyph.net"
 Repository = "https://github.com/remsky/repoglyph-py"
 Issues = "https://github.com/remsky/repoglyph-py/issues"
 
+[project.optional-dependencies]
+png = ["resvg-py>=0.3.3"]
+
 [project.scripts]
 repoglyph = "repoglyph.cli:main"
 

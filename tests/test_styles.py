@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import xml.dom.minidom
+
 import pytest
 
 from repoglyph.cli import build_parser
@@ -24,11 +26,6 @@ def test_registry_is_complete() -> None:
     assert set(STYLES) == EXPECTED_STYLES
 
 
-def test_every_style_is_described() -> None:
-    for spec in STYLES.values():
-        assert spec.summary.strip()
-
-
 def test_malformed_spec_fails_at_construction() -> None:
     with pytest.raises(ValueError):
         StyleSpec(_build_oblique, lambda *a, **k: "", summary="")
@@ -44,7 +41,7 @@ def test_style_survives_edge_inputs(style: str, shape: str) -> None:
     city = CityData(repo="edge/case", files=_EDGE_CITIES[shape], touches={})
     svg = render(city, style=style)
     assert svg.startswith("<svg")
-    assert svg.rstrip().endswith("</svg>")
+    xml.dom.minidom.parseString(svg)
 
 
 def test_cli_derives_style_menu_and_knobs() -> None:

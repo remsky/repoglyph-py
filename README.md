@@ -1,122 +1,72 @@
 # repoglyph
 
-Generate an isometric repo-city SVG from a local git clone.
+[![repoglyph.net](assets/badge.svg)](https://repoglyph.net)
+![tests](https://img.shields.io/badge/tests-83-5ef2d0)
+![coverage](https://img.shields.io/badge/coverage-85%25-5ef2d0)
 
-Each file becomes a building. File size drives height, file type drives color,
-and recent commits light windows. No network calls. No tokens.
+![repoglyph banner](assets/banner.png)
+
+Isometric repo-city banners from a local git clone. Each file is a building:
+size drives height, type drives color, recent commits light windows. Offline.
 
 ## Install
 
-From this checkout:
-
 ```bash
-uv sync
-uv run repoglyph path/to/repo
+pip install "repoglyph[png]"
 ```
 
-After PyPI release:
-
-```bash
-pip install repoglyph
-repoglyph path/to/repo
-```
-
-Requires Python 3.12+.
+Python 3.12+. Drop the `png` extra for SVG-only output.
 
 ## Usage
 
 ```bash
 repoglyph                 # current repo
-repoglyph ../project      # another local clone
+repoglyph ../project
 repoglyph . --style skyline --palette neon
-repoglyph . --commits 100 --out banner.svg
 ```
 
-Default output (inside the rendered repo; `--out-dir` or `--out` to override):
-
-```text
-<repo>/.glyph/<owner>_<repo>_<style>.svg
-```
-
-If `resvg-py` is installed, a PNG is written beside the SVG. Use `--no-png` to
-skip it.
-
-## Main Options
+Writes `<repo>/.glyph/<owner>_<repo>_<style>.svg`, plus a PNG with the `png` extra.
 
 | Flag | Default | Meaning |
 | --- | --- | --- |
 | `--commits N` | `50` | commits used for lit windows |
 | `--style NAME` | `oblique` | `oblique`, `skyline`, or `highrise` |
 | `--palette NAME\|FILE` | `light` | built-in theme or palette JSON |
-| `--size WxH` | `1280x480` | SVG canvas size |
+| `--size WxH` | `1280x480` | canvas size |
 | `--full` | off | fit canvas to the whole city |
 | `--out FILE` | auto | output SVG path |
 | `--out-dir DIR` | `<repo>/.glyph` | folder for all outputs |
 | `--no-png` | off | skip PNG output |
+| `--skip-commons` | off | drop lockfiles from the city |
 | `--okf [DIR]` | off | write an OKF context bundle |
 | `--cache` | off | save repo data for `--from-cache` |
 
-Run `repoglyph --help` for the full list.
-
-## Caching
-
-Off by default. `--cache` saves the gathered repo data to
-`<out-dir>/cache.json` (`--cache-dir` to relocate); `--from-cache`
-re-renders from that snapshot without reading git.
+`repoglyph --help` for the rest.
 
 ## Styles
 
-- `oblique`: flat cabinet-oblique map view.
-- `skyline`: one building per file.
-- `highrise`: one tower per district, with floors for subdirectories.
+- `oblique`: flat cabinet-oblique map (default)
+- `skyline`: one building per file
+- `highrise`: one tower per district, floors are subdirs
 
 ## OKF
 
-`--okf` writes markdown context files from the same repo data:
-
-```bash
-repoglyph . --okf
-repoglyph . --okf .knowledge
-```
-
-Output:
-
-```text
-okf/
-  index.md
-  repository.md
-  hotspots.md
-  districts/<name>.md
-```
+`--okf` writes markdown context files from the same repo data: an index,
+repository and hotspot summaries, and one file per district.
 
 ## Limits
 
-- The image shows folder structure, not runtime architecture.
+- Shows folder structure, not runtime architecture.
 - Lit windows use the sampled commit window, not full history.
-- File bytes are used as the size proxy.
+- File bytes proxy size.
 
 ## Development
 
 ```bash
+uv sync
 uv run pytest
 uv run ruff check src tests
-uv run ruff format --check src tests
-```
-
-Project layout:
-
-```text
-src/repoglyph/
-  cli.py
-  gitsource.py
-  cache.py
-  models.py
-  metrics/
-  okf.py
-  palette.py
-  palettes.py
-  render/
-tests/
+prek install   # pre-commit hook: refreshes the README badges
 ```
 
 ## License

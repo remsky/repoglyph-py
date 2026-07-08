@@ -8,7 +8,10 @@ field is ``type``. This module renders ``CityData`` into such a bundle:
     index.md            directory listing (reserved name, no frontmatter)
     repository.md       fingerprint metrics + district overview
     hotspots.md         files ranked by recent churn, oversized-file watchlist
-    districts/<d>.md    one concept per top-level directory, with full inventory
+    districts/<d>.md    one concept per district, with full inventory
+
+Districts are the banner's balanced directory cut (at default settings), so
+both artifacts describe the same neighbourhoods.
 
 Output is deterministic for a given ``CityData`` (no wall-clock timestamps),
 so regenerating without new commits is a no-op diff.
@@ -16,6 +19,7 @@ so regenerating without new commits is a no-op diff.
 
 from __future__ import annotations
 
+import dataclasses
 import json
 import logging
 import re
@@ -30,8 +34,10 @@ from repoglyph.metrics import (
     compute_metrics,
     fmt_bytes,
 )
-from repoglyph.models import CityData, SourceFile, group_by_district
+from repoglyph.models import CityData, SourceFile
 from repoglyph.palette import CATEGORIES, categorize
+from repoglyph.render.districts import district_cut
+from repoglyph.render.scene import build_voxel
 
 __all__ = ["build_okf_bundle", "write_okf_bundle"]
 
@@ -61,7 +67,10 @@ def build_okf_bundle(data: CityData, metrics: RepoMetrics | None = None) -> dict
         metrics = compute_metrics(data)
 
     total_churn = sum(data.touches.values())
-    districts = group_by_district(data.files)
+    cut = district_cut(build_voxel(data.files)) if data.files else set()
+    districts: dict[str, list[SourceFile]] = {}
+    for file in data.files:
+        districts.setdefault(_assign(file.path, cut), []).append(file)
     names = sorted(districts, key=lambda name: (-len(districts[name]), name))
     slugs = _district_slugs(names)
     rows = [
@@ -69,19 +78,20 @@ def build_okf_bundle(data: CityData, metrics: RepoMetrics | None = None) -> dict
             name=name,
             slug=slugs[name],
             files=districts[name],
-            churn=sum(count for path, count in data.touches.items() if _district(path) == name),
+            churn=sum(count for path, count in data.touches.items() if _assign(path, cut) == name),
             total_churn=total_churn,
         )
         for name in names
     ]
+    metrics = _cut_metrics(metrics, rows, cut)
 
     bundle = {
         "repository.md": _repository_doc(data, metrics, rows),
-        "hotspots.md": _hotspots_doc(data, rows),
+        "hotspots.md": _hotspots_doc(data, rows, cut),
         "index.md": _root_index(data, rows),
     }
     for row in rows:
-        bundle[f"districts/{row.slug}.md"] = _district_doc(data, row)
+        bundle[f"districts/{row.slug}.md"] = _district_doc(data, row, cut)
     if rows:
         bundle["districts/index.md"] = _district_index(rows)
     return bundle
@@ -94,8 +104,8 @@ def write_okf_bundle(
 ) -> int:
     """Write the bundle under *out_dir* and return the number of documents.
 
-    ``districts/*.md`` is cleared first so a renamed top-level directory does
-    not leave a stale concept behind; treat *out_dir* as generated output.
+    ``districts/*.md`` is cleared first so a changed district cut does not
+    leave a stale concept behind; treat *out_dir* as generated output.
     """
     bundle = build_okf_bundle(data, metrics)
     stale = out_dir / "districts"
@@ -134,7 +144,8 @@ class _DistrictRow:
 
     @property
     def link(self) -> str:
-        return f"[{self.name}](/districts/{self.slug}.md)"
+        """Markdown link to the district page, relative to the bundle root."""
+        return f"[{self.name}](districts/{self.slug}.md)"
 
     def blurb(self, file_count: int) -> str:
         share = len(self.files) / file_count if file_count else 0.0
@@ -195,15 +206,16 @@ def _repository_doc(data: CityData, metrics: RepoMetrics, rows: list[_DistrictRo
         + (f" at `{data.head_sha[:9]}`" if data.head_sha else "")
         + "; an untouched file is dormant in that window, not necessarily dead.",
         "- Sizes are blob bytes at HEAD, not lines of code.",
-        "- Districts are top-level directories: they show organization, not import coupling.",
+        "- Districts are the banner's balanced directory cut at default settings: they show "
+        "organization, not import coupling.",
         "",
-        "Ranked churn lives in [hotspots](/hotspots.md).",
+        "Ranked churn lives in [hotspots](hotspots.md).",
         "",
     ]
     return "\n".join(lines)
 
 
-def _hotspots_doc(data: CityData, rows: list[_DistrictRow]) -> str:
+def _hotspots_doc(data: CityData, rows: list[_DistrictRow], cut: set[str]) -> str:
     front = _frontmatter(
         type="Report",
         title="Hotspots",
@@ -222,8 +234,8 @@ def _hotspots_doc(data: CityData, rows: list[_DistrictRow]) -> str:
         lines += ["| file | lines changed | size at HEAD | district |", "| --- | --- | --- | --- |"]
         for path, churn in ranked[:_HOTSPOT_LIMIT]:
             size = fmt_bytes(sizes[path]) if path in sizes else "removed at HEAD"
-            district = links.get(_district(path), _district(path))
-            lines.append(f"| {code_cell(path)} | {churn:,} | {size} | {district} |")
+            name = _assign(path, cut)
+            lines.append(f"| {code_cell(path)} | {churn:,} | {size} | {links.get(name, name)} |")
         if len(ranked) > _HOTSPOT_LIMIT:
             lines += ["", f"({len(ranked) - _HOTSPOT_LIMIT} more touched files not shown.)"]
         if data.touch_truncated:
@@ -248,11 +260,11 @@ def _hotspots_doc(data: CityData, rows: list[_DistrictRow]) -> str:
             "|" + " --- |" * len(finding.columns),
         ]
         lines += ["| " + " | ".join(cells) + " |" for cells in found]
-    lines += ["", "Context: [repository overview](/repository.md).", ""]
+    lines += ["", "Context: [repository overview](repository.md).", ""]
     return "\n".join(lines)
 
 
-def _district_doc(data: CityData, row: _DistrictRow) -> str:
+def _district_doc(data: CityData, row: _DistrictRow, cut: set[str]) -> str:
     is_root = row.name == ".root"
     front = _frontmatter(
         type="Directory",
@@ -260,7 +272,7 @@ def _district_doc(data: CityData, row: _DistrictRow) -> str:
         description=(
             "Files at the repository root."
             if is_root
-            else f"Top-level directory `{row.name}/`: {_n_files(len(row.files))}, "
+            else f"District `{row.name}/`: {_n_files(len(row.files))}, "
             f"{fmt_bytes(row.bytes)}."
         ),
         tags=["repoglyph", "district"],
@@ -285,7 +297,7 @@ def _district_doc(data: CityData, row: _DistrictRow) -> str:
     ]
 
     active = sorted(
-        ((path, count) for path, count in data.touches.items() if _district(path) == row.name),
+        ((path, count) for path, count in data.touches.items() if _assign(path, cut) == row.name),
         key=lambda item: (-item[1], item[0]),
     )[:_DISTRICT_FILE_LIMIT]
     if active:
@@ -293,7 +305,13 @@ def _district_doc(data: CityData, row: _DistrictRow) -> str:
         lines += [f"| {code_cell(path)} | {count:,} |" for path, count in active]
 
     lines += _files_section(row)
-    lines += ["", "Context: [repository overview](/repository.md).", ""]
+    if not is_root and row.name not in cut:
+        lines += [
+            "",
+            "Note: the banner's district cap leaves these files unlabelled; this page "
+            "groups them under their top-level directory and has no banner label.",
+        ]
+    lines += ["", "Context: [repository overview](../repository.md).", ""]
     return "\n".join(lines)
 
 
@@ -333,11 +351,11 @@ def _root_index(data: CityData, rows: list[_DistrictRow]) -> str:
         f"Structural knowledge about `{data.repo}`, generated by repoglyph from the "
         f"git tree and the last {data.commit_window} commits.",
         "",
-        "* [Repository](/repository.md) - fingerprint metrics and district overview",
-        "* [Hotspots](/hotspots.md) - files ranked by recent churn",
+        "* [Repository](repository.md) - fingerprint metrics and district overview",
+        "* [Hotspots](hotspots.md) - files ranked by recent churn",
     ]
     if rows:
-        lines += ["", "# Districts", ""]
+        lines += ["", "## Districts", ""]
         lines += [f"* {row.link} - {row.blurb(len(data.files))}" for row in rows]
     lines.append("")
     return "\n".join(lines)
@@ -345,7 +363,10 @@ def _root_index(data: CityData, rows: list[_DistrictRow]) -> str:
 
 def _district_index(rows: list[_DistrictRow]) -> str:
     lines = ["# Districts", ""]
-    lines += [f"* {row.link} - {_n_files(len(row.files))}, {fmt_bytes(row.bytes)}" for row in rows]
+    lines += [
+        f"* [{row.name}]({row.slug}.md) - {_n_files(len(row.files))}, {fmt_bytes(row.bytes)}"
+        for row in rows
+    ]
     lines.append("")
     return "\n".join(lines)
 
@@ -372,8 +393,26 @@ def _frontmatter(**fields: object) -> str:
     return "\n".join(lines)
 
 
-def _district(path: str) -> str:
-    return SourceFile(path).district
+def _assign(path: str, cut: set[str]) -> str:
+    """The district (longest cut prefix) *path* belongs to; root files map to ``.root``."""
+    directory = path.rpartition("/")[0]
+    if not directory:
+        return ".root"
+    parts = directory.split("/")
+    for i in range(len(parts), 0, -1):
+        prefix = "/".join(parts[:i])
+        if prefix in cut:
+            return prefix
+    return parts[0]
+
+
+def _cut_metrics(metrics: RepoMetrics, rows: list[_DistrictRow], cut: set[str]) -> RepoMetrics:
+    """Point the fingerprint's largest district at a banner label, as the panel does."""
+    top = next((row for row in rows if row.name in cut), None)
+    if top is None or not metrics.file_count:
+        return metrics
+    share = len(top.files) / metrics.file_count
+    return dataclasses.replace(metrics, largest_district=top.name, largest_district_share=share)
 
 
 def _district_slugs(names: list[str]) -> dict[str, str]:

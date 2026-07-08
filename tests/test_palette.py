@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-from repoglyph.palette import CATEGORY_COLORS, categorize
+from repoglyph.palette import categorize
 
 
 @pytest.mark.parametrize(
@@ -24,9 +24,3 @@ from repoglyph.palette import CATEGORY_COLORS, categorize
 )
 def test_categorize(path: str, expected: str) -> None:
     assert categorize(path) == expected
-
-
-def test_every_category_has_three_face_colors() -> None:
-    for faces in CATEGORY_COLORS.values():
-        assert len(faces) == 3
-        assert all(color.startswith("#") for color in faces)
