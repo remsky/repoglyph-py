@@ -5,7 +5,14 @@ from __future__ import annotations
 from collections.abc import Iterable
 from dataclasses import dataclass, field
 
-__all__ = ["SourceFile", "CityData", "group_by_district", "filter_files", "skip_commons"]
+__all__ = [
+    "SourceFile",
+    "CityData",
+    "group_by_district",
+    "filter_files",
+    "skip_commons",
+    "sha_label",
+]
 
 #: District name used for files that live at the repository root.
 ROOT_DISTRICT = ".root"
@@ -128,6 +135,12 @@ def filter_files(
     out_files = [SourceFile(keep[f.path], f.size) for f in files if f.path in keep]
     out_touches = {keep[p]: count for p, count in touches.items() if p in keep}
     return out_files, out_touches
+
+
+def sha_label(sha: str, length: int = 7) -> str:
+    """Truncate a sha for display, keeping any ``+staged``-style marker intact."""
+    hexpart, plus, marker = sha.partition("+")
+    return hexpart[:length] + plus + marker
 
 
 def skip_commons(

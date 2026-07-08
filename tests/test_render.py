@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import dataclasses
 import xml.dom.minidom
 
 from repoglyph.models import CityData, SourceFile
@@ -27,6 +28,11 @@ def test_render_returns_well_formed_svg() -> None:
     assert svg.endswith("</svg>")
     # Parses as XML (raises on malformed markup).
     xml.dom.minidom.parseString(svg)
+
+
+def test_staged_marker_survives_the_panel_sha_cut() -> None:
+    city = dataclasses.replace(_sample_city(), head_sha="abc1234def5678+staged")
+    assert "abc1234+staged" in render(city)
 
 
 def test_render_escapes_repo_and_district_text() -> None:

@@ -1,10 +1,35 @@
 from __future__ import annotations
 
+import subprocess
+from pathlib import Path
+
 from repoglyph.gitsource import (
     _REMOTE_RE,
     _parse_ls_tree,
     _parse_numstat,
+    gather_city_from_path,
 )
+
+
+def test_staged_reads_the_index_tree(tmp_path: Path) -> None:
+    def git(*args: str) -> None:
+        subprocess.run(["git", "-C", str(tmp_path), *args], check=True, capture_output=True)
+
+    git("init", "-q")
+    git("config", "user.email", "t@example.com")
+    git("config", "user.name", "t")
+    (tmp_path / "a.py").write_text("x = 1\n")
+    git("add", "a.py")
+    git("commit", "-qm", "init")
+    (tmp_path / "b.py").write_text("y = 2\n")
+    git("add", "b.py")
+
+    head = gather_city_from_path(str(tmp_path))
+    staged = gather_city_from_path(str(tmp_path), staged=True)
+    assert [f.path for f in head.files] == ["a.py"]
+    assert {f.path for f in staged.files} == {"a.py", "b.py"}
+    assert staged.head_sha == f"{head.head_sha}+staged"
+    assert staged.touches == head.touches
 
 
 def test_parse_ls_tree_keeps_blobs_with_sizes() -> None:

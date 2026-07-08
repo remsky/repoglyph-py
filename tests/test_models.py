@@ -1,6 +1,12 @@
 from __future__ import annotations
 
-from repoglyph.models import SourceFile, skip_commons
+from repoglyph.models import SourceFile, sha_label, skip_commons
+
+
+def test_sha_label_truncates_hex_but_keeps_marker() -> None:
+    assert sha_label("abc1234def5678") == "abc1234"
+    assert sha_label("abc1234def5678+staged") == "abc1234+staged"
+    assert sha_label("abc1234def5678+staged", 9) == "abc1234de+staged"
 
 
 def test_skip_commons_drops_lockfiles_everywhere() -> None:

@@ -1,18 +1,18 @@
 ---
 type: "Directory"
 title: "src/repoglyph/render"
-description: "District `src/repoglyph/render/`: 14 files, 88.8 KB."
+description: "District `src/repoglyph/render/`: 14 files, 88.9 KB."
 tags: ["repoglyph", "district"]
 files: 14
-bytes: 90956
+bytes: 91002
 ---
 
 # Stats
 
 | metric | value |
 | --- | --- |
-| files | 14 (22% of the repo) |
-| bytes | 88.8 KB |
+| files | 14 (21% of the repo) |
+| bytes | 88.9 KB |
 | max depth | 3 |
 | recent churn | 2,622 lines (37% of the window) |
 
@@ -23,7 +23,7 @@ bytes: 90956
 | `src/repoglyph/render/districts.py` | 16.1 KB | code |
 | `src/repoglyph/render/highrise.py` | 13.9 KB | code |
 | `src/repoglyph/render/scene.py` | 13.2 KB | code |
-| `src/repoglyph/render/overlay.py` | 8.2 KB | code |
+| `src/repoglyph/render/overlay.py` | 8.3 KB | code |
 | `src/repoglyph/render/compose.py` | 7.5 KB | code |
 | `src/repoglyph/render/oblique.py` | 6.9 KB | code |
 | `src/repoglyph/render/logo.py` | 5.0 KB | code |
@@ -60,7 +60,7 @@ Complete inventory: 14 files.
 - `lighting.py` (862 B)
 - `logo.py` (5.0 KB)
 - `oblique.py` (6.9 KB)
-- `overlay.py` (8.2 KB)
+- `overlay.py` (8.3 KB)
 - `scene.py` (13.2 KB)
 - `skyline.py` (2.8 KB)
 - `styles.py` (4.7 KB)

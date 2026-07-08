@@ -45,11 +45,14 @@ def gather_city_from_path(
     path: str,
     *,
     commit_window: int = 50,
+    staged: bool = False,
 ) -> CityData:
     """Assemble ``CityData`` from an existing local clone at *path* (no network fetch).
 
     The label is the ``owner/repo`` slug derived from the ``origin`` remote when
-    it points at github.com, otherwise the directory name.
+    it points at github.com, otherwise the directory name. With *staged* the tree
+    is read from the index (HEAD + staged changes) and the sha gets a ``+staged``
+    marker; the churn window stays the last commits at HEAD.
     """
     repo_dir = os.path.abspath(path)
     try:
@@ -57,7 +60,7 @@ def gather_city_from_path(
         slug = _slug_from_remote(repo_dir)
         label = slug or os.path.basename(repo_dir.rstrip("\\/")) or repo_dir
         logger.info("[1/2] reading local clone %s ...", repo_dir)
-        return _gather_from_dir(repo_dir, label=label, commit_window=commit_window)
+        return _gather_from_dir(repo_dir, label=label, commit_window=commit_window, staged=staged)
     except subprocess.CalledProcessError as error:
         detail = (error.stderr or "").strip() or f"git exited {error.returncode}"
         raise CloneError(detail) from error
@@ -65,10 +68,15 @@ def gather_city_from_path(
         raise CloneError(str(error)) from error
 
 
-def _gather_from_dir(repo_dir: str, *, label: str, commit_window: int) -> CityData:
+def _gather_from_dir(repo_dir: str, *, label: str, commit_window: int, staged: bool) -> CityData:
     logger.info("[2/2] reading tree + last %d commits ...", commit_window)
     head_sha = _git(repo_dir, "rev-parse", "HEAD").strip()
-    files = _parse_ls_tree(_git(repo_dir, "ls-tree", "-r", "--long", "HEAD"))
+    tree = "HEAD"
+    if staged:
+        # write-tree snapshots the index as a tree object without moving any ref.
+        tree = _git(repo_dir, "write-tree").strip()
+        head_sha += "+staged"
+    files = _parse_ls_tree(_git(repo_dir, "ls-tree", "-r", "--long", tree))
     touches = _parse_numstat(
         _git(
             repo_dir,

@@ -16,6 +16,7 @@ GENERATE = [
     *("uv", "run", "repoglyph", "."),
     *("--palette", "neon", "--border", "--detail", "28"),
     "--skip-commons",
+    "--staged",
     "--okf",
 ]
 

@@ -1,10 +1,10 @@
 ---
 type: "Directory"
 title: "src/repoglyph"
-description: "District `src/repoglyph/`: 11 files, 52.6 KB."
+description: "District `src/repoglyph/`: 11 files, 53.6 KB."
 tags: ["repoglyph", "district"]
 files: 11
-bytes: 53818
+bytes: 54886
 ---
 
 # Stats
@@ -12,7 +12,7 @@ bytes: 53818
 | metric | value |
 | --- | --- |
 | files | 11 (17% of the repo) |
-| bytes | 52.6 KB |
+| bytes | 53.6 KB |
 | max depth | 2 |
 | recent churn | 1,776 lines (25% of the window) |
 
@@ -21,11 +21,11 @@ bytes: 53818
 | file | size | category |
 | --- | --- | --- |
 | `src/repoglyph/okf.py` | 15.8 KB | code |
-| `src/repoglyph/cli.py` | 10.4 KB | code |
+| `src/repoglyph/cli.py` | 10.7 KB | code |
 | `src/repoglyph/geometry.py` | 6.2 KB | code |
-| `src/repoglyph/gitsource.py` | 5.1 KB | code |
+| `src/repoglyph/gitsource.py` | 5.5 KB | code |
 | `src/repoglyph/palettes.py` | 4.7 KB | code |
-| `src/repoglyph/models.py` | 4.3 KB | code |
+| `src/repoglyph/models.py` | 4.6 KB | code |
 | `src/repoglyph/palette.py` | 2.6 KB | code |
 | `src/repoglyph/cache.py` | 2.2 KB | code |
 | `src/repoglyph/__init__.py` | 614 B | code |
@@ -55,11 +55,11 @@ Complete inventory: 11 files.
 - `__init__.py` (614 B)
 - `__main__.py` (199 B)
 - `cache.py` (2.2 KB)
-- `cli.py` (10.4 KB)
+- `cli.py` (10.7 KB)
 - `geometry.py` (6.2 KB)
-- `gitsource.py` (5.1 KB)
+- `gitsource.py` (5.5 KB)
 - `hashing.py` (415 B)
-- `models.py` (4.3 KB)
+- `models.py` (4.6 KB)
 - `okf.py` (15.8 KB)
 - `palette.py` (2.6 KB)
 - `palettes.py` (4.7 KB)

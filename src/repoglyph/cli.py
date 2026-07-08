@@ -188,6 +188,12 @@ def build_parser() -> argparse.ArgumentParser:
         help="omit common machine-generated files (lockfiles) from the city",
     )
     parser.add_argument(
+        "--staged",
+        action="store_true",
+        help="draw the staged tree (HEAD + index) instead of HEAD; the sha "
+        "label gets a +staged marker",
+    )
+    parser.add_argument(
         "--palette",
         default="light",
         metavar="NAME|FILE",
@@ -231,6 +237,8 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     if not args.from_cache and not os.path.isdir(args.repo):
         parser.error(f"repo must be a path to a local git clone: {args.repo!r}")
+    if args.staged and args.from_cache:
+        parser.error("--staged reads git and cannot combine with --from-cache")
     try:
         width, height = _parse_size(args.size)
     except ValueError as error:
@@ -252,7 +260,9 @@ def main(argv: list[str] | None = None) -> int:
         else:
             if not git_available():
                 raise CloneError("git was not found on PATH")
-            data = gather_city_from_path(args.repo, commit_window=args.commits)
+            data = gather_city_from_path(
+                args.repo, commit_window=args.commits, staged=args.staged
+            )
             if args.cache:
                 save_city(data, cache_dir)
     except CloneError as error:

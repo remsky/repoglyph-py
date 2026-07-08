@@ -34,7 +34,7 @@ from repoglyph.metrics import (
     compute_metrics,
     fmt_bytes,
 )
-from repoglyph.models import CityData, SourceFile
+from repoglyph.models import CityData, SourceFile, sha_label
 from repoglyph.palette import CATEGORIES, categorize
 from repoglyph.render.districts import district_cut
 from repoglyph.render.scene import build_voxel
@@ -203,7 +203,7 @@ def _repository_doc(data: CityData, metrics: RepoMetrics, rows: list[_DistrictRo
         "# Notes",
         "",
         f"- Activity covers only the last {data.commit_window} commits"
-        + (f" at `{data.head_sha[:9]}`" if data.head_sha else "")
+        + (f" at `{sha_label(data.head_sha, 9)}`" if data.head_sha else "")
         + "; an untouched file is dormant in that window, not necessarily dead.",
         "- Sizes are blob bytes at HEAD, not lines of code.",
         "- Districts are the banner's balanced directory cut at default settings: they show "

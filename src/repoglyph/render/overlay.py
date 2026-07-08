@@ -7,6 +7,7 @@ import math
 
 from repoglyph.geometry import PANEL_WIDTH, BannerLayout
 from repoglyph.metrics import RepoMetrics
+from repoglyph.models import sha_label
 from repoglyph.palette import CATEGORIES, CATEGORY_COLORS, Category
 from repoglyph.palettes import DARK_CHROME, Chrome
 from repoglyph.render.logo import render_logo
@@ -108,7 +109,7 @@ def render_panel(
     left = banner.pad
     title_y = banner.pad + 22 * ts
     sub_y = title_y + 18 * ts
-    short_sha = str(head_sha)[:7] if head_sha else None
+    short_sha = sha_label(str(head_sha)) if head_sha else None
     stats_y = sub_y + 24 * ts
 
     counts = f"{metrics.file_count} files · {metrics.dir_count} dirs · depth {metrics.max_depth}"
