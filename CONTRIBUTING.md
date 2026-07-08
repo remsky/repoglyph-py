@@ -21,11 +21,13 @@ Two local hooks keep the committed artifacts in sync with the code:
 - `readme-badges` reruns the suite with coverage and rewrites the README shields.
 - `repoglyph-outputs` regenerates `assets/banner.png` and the `.glyph/okf` bundle
   from the staged tree (`--staged --skip-commons`), so each commit ships a
-  banner and bundle describing its own tree.
+  banner and bundle describing its own tree. It also rebuilds the plugin usage
+  skill (`plugin/skills/repoglyph/SKILL.md`) from the README, so never edit
+  that file directly.
 
-A hook that changes files fails the commit; re-stage the refreshed outputs and
-commit again. The banner refresh can bounce twice on the first try because the
-new PNG's own size feeds back into the city.
+Both hooks stage what they refresh, so the commit succeeds on the first try;
+the hook output lists anything that was pulled in. The banner regenerates in
+up to three passes because its own bytes feed back into the city it draws.
 
 ## Tests
 

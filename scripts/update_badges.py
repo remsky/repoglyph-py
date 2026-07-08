@@ -1,4 +1,4 @@
-"""Refresh the README tests/coverage badges from a live pytest run."""
+"""Refresh the README tests/coverage badges from a live pytest run, staging the result."""
 
 from __future__ import annotations
 
@@ -30,11 +30,11 @@ def main() -> int:
     updated = re.sub(r"badge/coverage-\d+%25-", f"badge/coverage-{total.group(1)}%25-", updated)
     if updated != text:
         README.write_text(updated, encoding="utf-8")
+        subprocess.run(["git", "add", "README.md"], check=True, cwd=README.parent)
         print(
-            f"README badges updated (tests {passed.group(1)}, "
-            f"coverage {total.group(1)}%); re-stage README.md"
+            f"README badges refreshed and staged into this commit "
+            f"(tests {passed.group(1)}, coverage {total.group(1)}%)"
         )
-        return 1
     return 0
 
 

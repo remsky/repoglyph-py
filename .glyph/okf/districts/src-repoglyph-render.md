@@ -11,10 +11,10 @@ bytes: 91002
 
 | metric | value |
 | --- | --- |
-| files | 14 (21% of the repo) |
+| files | 14 (20% of the repo) |
 | bytes | 88.9 KB |
 | max depth | 3 |
-| recent churn | 2,622 lines (37% of the window) |
+| recent churn | 2,625 lines (36% of the window) |
 
 # Largest files
 
@@ -38,7 +38,7 @@ bytes: 91002
 | `src/repoglyph/render/districts.py` | 476 |
 | `src/repoglyph/render/scene.py` | 392 |
 | `src/repoglyph/render/highrise.py` | 389 |
-| `src/repoglyph/render/overlay.py` | 243 |
+| `src/repoglyph/render/overlay.py` | 246 |
 | `src/repoglyph/render/oblique.py` | 226 |
 | `src/repoglyph/render/compose.py` | 215 |
 | `src/repoglyph/render/buildings.py` | 142 |

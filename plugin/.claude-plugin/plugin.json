@@ -1,0 +1,8 @@
+{
+  "name": "repoglyph",
+  "description": "Teaches Claude to generate repoglyph banners, OKF bundles, and per-repo map skills.",
+  "version": "0.1.0",
+  "author": {
+    "name": "remsky"
+  }
+}

@@ -132,6 +132,25 @@ def test_cap_overflow_district_is_flagged() -> None:
     assert "| largest district | pkg/sub00, 5% of files |" in bundle["repository.md"]
 
 
+def test_skill_doc_is_opt_in() -> None:
+    assert "SKILL.md" not in build_okf_bundle(_city())
+    doc = build_okf_bundle(_city(), skill=True)["SKILL.md"]
+    front = _frontmatter_of(doc)
+    assert 'name: "repo-map"' in front
+    assert "Structural map of owner/repo" in front
+    assert "abc1234" not in front  # descriptions load every session; keep them sha-stable
+    assert "[repository.md](repository.md)" in doc
+    assert "[hotspots.md](hotspots.md)" in doc
+    assert "[the README](https://github.com/owner/repo#readme)" in doc
+
+
+def test_skill_name_slug_for_local_paths() -> None:
+    data = CityData(repo="My_Repo.py", files=[SourceFile("a.py", size=1)])
+    front = _frontmatter_of(build_okf_bundle(data, skill=True)["SKILL.md"])
+    assert 'name: "my-repo-py-map"' in front
+    assert "the README at the repository root" in build_okf_bundle(data, skill=True)["SKILL.md"]
+
+
 def test_bundle_is_deterministic() -> None:
     assert build_okf_bundle(_city()) == build_okf_bundle(_city())
 

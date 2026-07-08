@@ -11,7 +11,7 @@ bytes: 525
 
 | metric | value |
 | --- | --- |
-| files | 1 (2% of the repo) |
+| files | 1 (1% of the repo) |
 | bytes | 525 B |
 | max depth | 2 |
 | recent churn | 24 lines (0% of the window) |

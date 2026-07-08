@@ -9,6 +9,7 @@ field is ``type``. This module renders ``CityData`` into such a bundle:
     repository.md       fingerprint metrics + district overview
     hotspots.md         files ranked by recent churn, oversized-file watchlist
     districts/<d>.md    one concept per district, with full inventory
+    SKILL.md            agent-skill entry point (opt-in via ``skill=True``)
 
 Districts are the banner's balanced directory cut (at default settings), so
 both artifacts describe the same neighbourhoods.
@@ -61,7 +62,12 @@ _GITHUB_SLUG_RE = re.compile(r"^[\w.-]+/[\w.-]+$")
 # --------------------------------------------------------------------------
 # public API
 # --------------------------------------------------------------------------
-def build_okf_bundle(data: CityData, metrics: RepoMetrics | None = None) -> dict[str, str]:
+def build_okf_bundle(
+    data: CityData,
+    metrics: RepoMetrics | None = None,
+    *,
+    skill: bool = False,
+) -> dict[str, str]:
     """Render *data* into a bundle: relative posix path -> markdown content."""
     if metrics is None:
         metrics = compute_metrics(data)
@@ -94,6 +100,8 @@ def build_okf_bundle(data: CityData, metrics: RepoMetrics | None = None) -> dict
         bundle[f"districts/{row.slug}.md"] = _district_doc(data, row, cut)
     if rows:
         bundle["districts/index.md"] = _district_index(rows)
+    if skill:
+        bundle["SKILL.md"] = _skill_doc(data, rows)
     return bundle
 
 
@@ -101,13 +109,15 @@ def write_okf_bundle(
     data: CityData,
     out_dir: Path,
     metrics: RepoMetrics | None = None,
+    *,
+    skill: bool = False,
 ) -> int:
     """Write the bundle under *out_dir* and return the number of documents.
 
     ``districts/*.md`` is cleared first so a changed district cut does not
     leave a stale concept behind; treat *out_dir* as generated output.
     """
-    bundle = build_okf_bundle(data, metrics)
+    bundle = build_okf_bundle(data, metrics, skill=skill)
     stale = out_dir / "districts"
     if stale.is_dir():
         for path in stale.glob("*.md"):
@@ -358,6 +368,49 @@ def _root_index(data: CityData, rows: list[_DistrictRow]) -> str:
         lines += ["", "## Districts", ""]
         lines += [f"* {row.link} - {row.blurb(len(data.files))}" for row in rows]
     lines.append("")
+    return "\n".join(lines)
+
+
+def _skill_doc(data: CityData, rows: list[_DistrictRow]) -> str:
+    """An agent-skill entry point, so the bundle can live under ``.claude/skills``.
+
+    The frontmatter stays sha-free: skill descriptions load every session, and
+    the exact commit already lives in ``repository.md``.
+    """
+    tail = data.repo.rpartition("/")[2]
+    name = re.sub(r"[^a-z0-9]+", "-", tail.lower()).strip("-") or "repo"
+    front = _frontmatter(
+        name=f"{name}-map",
+        description=(
+            f"Structural map of {data.repo}: district layout, churn hotspots, and "
+            "size fingerprint. Use when orienting in this codebase or deciding "
+            "where to look first."
+        ),
+    )
+    readme = (
+        f"[the README](https://github.com/{data.repo}#readme)"
+        if _GITHUB_SLUG_RE.match(data.repo)
+        else "the README at the repository root"
+    )
+    lines = [
+        front,
+        "",
+        f"# {data.repo} map",
+        "",
+        f"Machine-generated structural context for `{data.repo}`, built by repoglyph "
+        f"from the git tree and the last {data.commit_window} commits. The exact "
+        "commit is `head_sha` in [repository.md](repository.md).",
+        "",
+        "Read in this order:",
+        "",
+        "1. [repository.md](repository.md) - fingerprint metrics, composition, districts",
+        "2. [hotspots.md](hotspots.md) - files ranked by recent churn",
+    ]
+    if rows:
+        lines.append(
+            "3. [districts/](districts/index.md) - per-district stats and file inventories"
+        )
+    lines += ["", f"For the project's own introduction, see {readme}.", ""]
     return "\n".join(lines)
 
 

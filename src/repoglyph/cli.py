@@ -222,6 +222,12 @@ def build_parser() -> argparse.ArgumentParser:
         "giving agents the repo's structural context) to DIR (default: okf/ beside the SVG)",
     )
     parser.add_argument(
+        "--skill",
+        action="store_true",
+        help="add a SKILL.md to the --okf bundle so it works as an agent skill "
+        "directory (e.g. --okf .claude/skills/repo-map --skill)",
+    )
+    parser.add_argument(
         "--version",
         action="version",
         version=f"%(prog)s {__version__}",
@@ -239,6 +245,8 @@ def main(argv: list[str] | None = None) -> int:
         parser.error(f"repo must be a path to a local git clone: {args.repo!r}")
     if args.staged and args.from_cache:
         parser.error("--staged reads git and cannot combine with --from-cache")
+    if args.skill and args.okf is None:
+        parser.error("--skill requires --okf")
     try:
         width, height = _parse_size(args.size)
     except ValueError as error:
@@ -325,7 +333,7 @@ def main(argv: list[str] | None = None) -> int:
     if args.okf is not None:
         okf_dir = Path(args.okf) if args.okf else out_path.parent / "okf"
         okf_data = dataclasses.replace(data, files=files, touches=touches)
-        doc_count = write_okf_bundle(okf_data, okf_dir)
+        doc_count = write_okf_bundle(okf_data, okf_dir, skill=args.skill)
         okf_note = f" + {okf_dir}{os.sep} ({doc_count} docs)"
 
     wrote = str(out_path) + (f" + {png_path.name}" if png_path else "") + okf_note

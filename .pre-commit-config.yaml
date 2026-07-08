@@ -2,13 +2,13 @@ repos:
   - repo: local
     hooks:
       - id: readme-badges
-        name: refresh README badges
+        name: refresh + stage README badges
         entry: uv run python scripts/update_badges.py
         language: system
         pass_filenames: false
         always_run: true
       - id: repoglyph-outputs
-        name: refresh the README banner + OKF bundle
+        name: refresh + stage the banner, OKF bundle, and plugin skill
         entry: uv run python scripts/update_glyph.py
         language: system
         pass_filenames: false

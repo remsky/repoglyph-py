@@ -1,0 +1,16 @@
+{
+  "name": "repoglyph",
+  "owner": {
+    "name": "remsky"
+  },
+  "metadata": {
+    "description": "Marketplace for the repoglyph plugin: isometric repo-city banners and OKF context bundles."
+  },
+  "plugins": [
+    {
+      "name": "repoglyph",
+      "source": "./plugin",
+      "description": "Isometric repo-city banners and OKF context bundles from any local git clone."
+    }
+  ]
+}
