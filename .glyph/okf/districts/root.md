@@ -4,7 +4,7 @@ title: ".root"
 description: "Files at the repository root."
 tags: ["repoglyph", "district"]
 files: 8
-bytes: 18480
+bytes: 18818
 ---
 
 # Stats
@@ -12,9 +12,9 @@ bytes: 18480
 | metric | value |
 | --- | --- |
 | files | 8 (11% of the repo) |
-| bytes | 18.0 KB |
+| bytes | 18.4 KB |
 | max depth | 0 |
-| recent churn | 613 lines (8% of the window) |
+| recent churn | 654 lines (9% of the window) |
 
 # Largest files
 
@@ -23,7 +23,7 @@ bytes: 18480
 | `LICENSE` | 11.1 KB | other |
 | `README.md` | 3.6 KB | docs |
 | `pyproject.toml` | 1.6 KB | conf |
-| `CONTRIBUTING.md` | 1.1 KB | docs |
+| `CONTRIBUTING.md` | 1.4 KB | docs |
 | `.pre-commit-config.yaml` | 472 B | conf |
 | `.gitignore` | 239 B | other |
 | `NOTICE` | 32 B | other |
@@ -33,12 +33,12 @@ bytes: 18480
 
 | file | lines changed |
 | --- | --- |
-| `README.md` | 269 |
+| `README.md` | 296 |
 | `LICENSE` | 202 |
 | `pyproject.toml` | 61 |
-| `CONTRIBUTING.md` | 34 |
+| `CONTRIBUTING.md` | 44 |
 | `.gitignore` | 29 |
-| `.pre-commit-config.yaml` | 15 |
+| `.pre-commit-config.yaml` | 19 |
 | `NOTICE` | 2 |
 | `.python-version` | 1 |
 
@@ -51,7 +51,7 @@ Complete inventory: 8 files.
 - `.gitignore` (239 B)
 - `.pre-commit-config.yaml` (472 B)
 - `.python-version` (5 B)
-- `CONTRIBUTING.md` (1.1 KB)
+- `CONTRIBUTING.md` (1.4 KB)
 - `LICENSE` (11.1 KB)
 - `NOTICE` (32 B)
 - `README.md` (3.6 KB)

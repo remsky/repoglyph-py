@@ -11,10 +11,10 @@ bytes: 57111
 
 | metric | value |
 | --- | --- |
-| files | 11 (16% of the repo) |
+| files | 11 (15% of the repo) |
 | bytes | 55.8 KB |
 | max depth | 2 |
-| recent churn | 1,823 lines (25% of the window) |
+| recent churn | 1,890 lines (25% of the window) |
 
 # Largest files
 
@@ -35,8 +35,8 @@ bytes: 57111
 
 | file | lines changed |
 | --- | --- |
-| `src/repoglyph/okf.py` | 490 |
-| `src/repoglyph/cli.py` | 377 |
+| `src/repoglyph/okf.py` | 547 |
+| `src/repoglyph/cli.py` | 387 |
 | `src/repoglyph/geometry.py` | 210 |
 | `src/repoglyph/gitsource.py` | 178 |
 | `src/repoglyph/models.py` | 164 |

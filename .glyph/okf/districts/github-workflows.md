@@ -1,18 +1,18 @@
 ---
 type: "Directory"
 title: ".github/workflows"
-description: "District `.github/workflows/`: 1 file, 525 B."
+description: "District `.github/workflows/`: 2 files, 1.3 KB."
 tags: ["repoglyph", "district"]
-files: 1
-bytes: 525
+files: 2
+bytes: 1375
 ---
 
 # Stats
 
 | metric | value |
 | --- | --- |
-| files | 1 (1% of the repo) |
-| bytes | 525 B |
+| files | 2 (3% of the repo) |
+| bytes | 1.3 KB |
 | max depth | 2 |
 | recent churn | 24 lines (0% of the window) |
 
@@ -20,6 +20,7 @@ bytes: 525
 
 | file | size | category |
 | --- | --- | --- |
+| `.github/workflows/release.yml` | 850 B | conf |
 | `.github/workflows/ci.yml` | 525 B | conf |
 
 # Recently active
@@ -30,10 +31,11 @@ bytes: 525
 
 # Files
 
-Complete inventory: 1 file.
+Complete inventory: 2 files.
 
 **`.github/workflows/`**
 
 - `ci.yml` (525 B)
+- `release.yml` (850 B)
 
 Context: [repository overview](../repository.md).

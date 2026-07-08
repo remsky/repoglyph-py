@@ -14,7 +14,7 @@ bytes: 4336
 | files | 2 (3% of the repo) |
 | bytes | 4.2 KB |
 | max depth | 1 |
-| recent churn | 88 lines (1% of the window) |
+| recent churn | 155 lines (2% of the window) |
 
 # Largest files
 
@@ -27,8 +27,8 @@ bytes: 4336
 
 | file | lines changed |
 | --- | --- |
-| `scripts/update_badges.py` | 44 |
-| `scripts/update_glyph.py` | 44 |
+| `scripts/update_glyph.py` | 103 |
+| `scripts/update_badges.py` | 52 |
 
 # Files
 

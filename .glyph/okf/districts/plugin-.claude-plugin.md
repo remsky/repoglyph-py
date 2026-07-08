@@ -14,13 +14,19 @@ bytes: 192
 | files | 1 (1% of the repo) |
 | bytes | 192 B |
 | max depth | 2 |
-| recent churn | 0 lines (0% of the window) |
+| recent churn | 8 lines (0% of the window) |
 
 # Largest files
 
 | file | size | category |
 | --- | --- | --- |
 | `plugin/.claude-plugin/plugin.json` | 192 B | conf |
+
+# Recently active
+
+| file | lines changed |
+| --- | --- |
+| `plugin/.claude-plugin/plugin.json` | 8 |
 
 # Files
 

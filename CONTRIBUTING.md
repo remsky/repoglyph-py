@@ -34,3 +34,16 @@ up to three passes because its own bytes feed back into the city it draws.
 Golden tests compare rendered SVGs byte for byte against `tests/goldens`. If a
 render change is intentional, run the suite once with
 `REPOGLYPH_REGEN_GOLDENS=1` and review the diff.
+
+## Releasing
+
+Bump `version` in `pyproject.toml`, commit, then tag and push:
+
+```bash
+git tag v0.1.1
+git push --tags
+```
+
+`.github/workflows/release.yml` runs the suite, builds the sdist/wheel, and
+publishes to PyPI via [trusted publishing](https://docs.pypi.org/trusted-publishers/)
+(OIDC, no stored token) from the `pypi` environment.

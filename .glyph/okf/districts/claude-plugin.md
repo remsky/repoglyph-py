@@ -14,13 +14,19 @@ bytes: 386
 | files | 1 (1% of the repo) |
 | bytes | 386 B |
 | max depth | 1 |
-| recent churn | 0 lines (0% of the window) |
+| recent churn | 16 lines (0% of the window) |
 
 # Largest files
 
 | file | size | category |
 | --- | --- | --- |
 | `.claude-plugin/marketplace.json` | 386 B | conf |
+
+# Recently active
+
+| file | lines changed |
+| --- | --- |
+| `.claude-plugin/marketplace.json` | 16 |
 
 # Files
 

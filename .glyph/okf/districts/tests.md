@@ -11,10 +11,10 @@ bytes: 37405
 
 | metric | value |
 | --- | --- |
-| files | 13 (19% of the repo) |
+| files | 13 (18% of the repo) |
 | bytes | 36.5 KB |
 | max depth | 1 |
-| recent churn | 1,203 lines (16% of the window) |
+| recent churn | 1,222 lines (16% of the window) |
 
 # Largest files
 
@@ -35,7 +35,7 @@ bytes: 37405
 
 | file | lines changed |
 | --- | --- |
-| `tests/test_okf.py` | 174 |
+| `tests/test_okf.py` | 193 |
 | `tests/test_districts.py` | 173 |
 | `tests/test_render.py` | 148 |
 | `tests/test_golden.py` | 121 |

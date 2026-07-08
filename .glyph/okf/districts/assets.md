@@ -14,7 +14,7 @@ bytes: 250976
 | files | 3 (4% of the repo) |
 | bytes | 245.1 KB |
 | max depth | 1 |
-| recent churn | 4 lines (0% of the window) |
+| recent churn | 6 lines (0% of the window) |
 
 # Largest files
 
@@ -28,8 +28,9 @@ bytes: 250976
 
 | file | lines changed |
 | --- | --- |
-| `assets/banner.png` | 3 |
+| `assets/banner.png` | 4 |
 | `assets/badge.svg` | 1 |
+| `assets/okf-icon.svg` | 1 |
 
 # Files
 
