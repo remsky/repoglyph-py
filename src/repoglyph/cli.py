@@ -268,9 +268,7 @@ def main(argv: list[str] | None = None) -> int:
         else:
             if not git_available():
                 raise CloneError("git was not found on PATH")
-            data = gather_city_from_path(
-                args.repo, commit_window=args.commits, staged=args.staged
-            )
+            data = gather_city_from_path(args.repo, commit_window=args.commits, staged=args.staged)
             if args.cache:
                 save_city(data, cache_dir)
     except CloneError as error:

@@ -282,8 +282,7 @@ def _district_doc(data: CityData, row: _DistrictRow, cut: set[str]) -> str:
         description=(
             "Files at the repository root."
             if is_root
-            else f"District `{row.name}/`: {_n_files(len(row.files))}, "
-            f"{fmt_bytes(row.bytes)}."
+            else f"District `{row.name}/`: {_n_files(len(row.files))}, {fmt_bytes(row.bytes)}."
         ),
         tags=["repoglyph", "district"],
         files=len(row.files),

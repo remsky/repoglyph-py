@@ -4,7 +4,7 @@ title: "remsky/repoglyph-py"
 description: "Structural fingerprint of remsky/repoglyph-py: 71 files in 14 directories, activity from the last 50 commits."
 resource: "https://github.com/remsky/repoglyph-py"
 tags: ["repoglyph", "fingerprint"]
-head_sha: "42959282d3903be8e8cf795884375f8b76685109+staged"
+head_sha: "c374420c2ea1c5d0b834d2fc83299cb820b0978b+staged"
 commit_window: 50
 generator: "repoglyph 0.1.0"
 ---
@@ -18,7 +18,7 @@ generator: "repoglyph 0.1.0"
 | max depth | 4 |
 | largest district | src/repoglyph/render, 20% of files |
 | modularity | 74 / 100 |
-| recent activity | 70 files touched in the last 50 commits |
+| recent activity | 71 files touched in the last 50 commits |
 
 # Composition
 
@@ -34,13 +34,13 @@ generator: "repoglyph 0.1.0"
 
 * [src/repoglyph/render](districts/src-repoglyph-render.md) - 14 files (20%), 88.9 KB, 34% of recent churn
 * [tests](districts/tests.md) - 13 files (18%), 36.5 KB, 16% of recent churn
-* [src/repoglyph](districts/src-repoglyph.md) - 11 files (15%), 55.8 KB, 25% of recent churn
+* [src/repoglyph](districts/src-repoglyph.md) - 11 files (15%), 55.7 KB, 24% of recent churn
 * [.root](districts/root.md) - 8 files (11%), 18.4 KB, 9% of recent churn
 * [src/repoglyph/render/fonts](districts/src-repoglyph-render-fonts.md) - 5 files (7%), 60.2 KB, 1% of recent churn
 * [src/repoglyph/metrics](districts/src-repoglyph-metrics.md) - 4 files (6%), 6.9 KB, 3% of recent churn
 * [tests/goldens](districts/tests-goldens.md) - 4 files (6%), 217.6 KB, 0% of recent churn
 * [assets](districts/assets.md) - 3 files (4%), 245.1 KB, 0% of recent churn
-* [.github/workflows](districts/github-workflows.md) - 2 files (3%), 1.3 KB, 0% of recent churn
+* [.github/workflows](districts/github-workflows.md) - 2 files (3%), 1.3 KB, 1% of recent churn
 * [scripts](districts/scripts.md) - 2 files (3%), 4.2 KB, 2% of recent churn
 * [tests/parity](districts/tests-parity.md) - 2 files (3%), 11.0 KB, 8% of recent churn
 * [.claude-plugin](districts/claude-plugin.md) - 1 file (1%), 386 B, 0% of recent churn
@@ -49,7 +49,7 @@ generator: "repoglyph 0.1.0"
 
 # Notes
 
-- Activity covers only the last 50 commits at `42959282d+staged`; an untouched file is dormant in that window, not necessarily dead.
+- Activity covers only the last 50 commits at `c374420c2+staged`; an untouched file is dormant in that window, not necessarily dead.
 - Sizes are blob bytes at HEAD, not lines of code.
 - Districts are the banner's balanced directory cut at default settings: they show organization, not import coupling.
 

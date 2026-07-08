@@ -14,7 +14,7 @@ bytes: 1375
 | files | 2 (3% of the repo) |
 | bytes | 1.3 KB |
 | max depth | 2 |
-| recent churn | 24 lines (0% of the window) |
+| recent churn | 67 lines (1% of the window) |
 
 # Largest files
 
@@ -27,6 +27,7 @@ bytes: 1375
 
 | file | lines changed |
 | --- | --- |
+| `.github/workflows/release.yml` | 43 |
 | `.github/workflows/ci.yml` | 24 |
 
 # Files
