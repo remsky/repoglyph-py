@@ -218,7 +218,7 @@ def _oblique_outline(color: str, size: float = _LABEL_SIZE) -> str:
 
 
 #: Bound a district path's display width when prefixes are shown.
-_LABEL_MAX_CHARS = 20
+_LABEL_MAX_CHARS = 24
 
 
 @dataclass(frozen=True, slots=True)

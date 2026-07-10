@@ -157,7 +157,8 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "--label-prefix",
-        action="store_true",
+        action=argparse.BooleanOptionalAction,
+        default=True,
         help="show the full district path on labels instead of the bare name",
     )
     parser.add_argument(

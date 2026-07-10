@@ -14,7 +14,7 @@ bytes: 3313
 | files | 1 (1% of the repo) |
 | bytes | 3.2 KB |
 | max depth | 3 |
-| recent churn | 107 lines (1% of the window) |
+| recent churn | 109 lines (1% of the window) |
 
 # Largest files
 
@@ -26,7 +26,7 @@ bytes: 3313
 
 | file | lines changed |
 | --- | --- |
-| `plugin/skills/repoglyph/SKILL.md` | 107 |
+| `plugin/skills/repoglyph/SKILL.md` | 109 |
 
 # Files
 

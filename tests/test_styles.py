@@ -50,7 +50,8 @@ def test_cli_derives_style_menu_and_knobs() -> None:
     # Product defaults come from field metadata (cli_default), not the library defaults.
     assert args.shear == 0.0
     assert args.streets == 1
-    assert args.detail == 14
+    assert args.detail == 24
+    assert args.label_prefix is True
     # Every registered style is a valid --style choice with its summary in the
     # help (compare whitespace-normalized: argparse wraps lines).
     help_text = " ".join(parser.format_help().split())

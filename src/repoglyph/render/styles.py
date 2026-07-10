@@ -48,7 +48,10 @@ class StyleParams:
     )
     detail: int = field(
         default=14,
-        metadata={"help": "district label budget; more = finer sub-structure"},
+        metadata={
+            "help": "district label budget; more = finer sub-structure",
+            "cli_default": 24,
+        },
     )
 
 

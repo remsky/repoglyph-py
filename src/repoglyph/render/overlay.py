@@ -17,7 +17,7 @@ __all__ = ["render_panel", "render_legend"]
 
 type _Colors = dict[Category, tuple[str, str, str]]
 
-#: Title font: full size, and the floor it shrinks to before eliding.
+#: Title font: full size, and the floor it shrinks to before wrapping at the owner slash.
 _TITLE_SIZE = 22.0
 _TITLE_FLOOR = 13.0
 #: Width above which a district name shown in a stat line is middle-elided.
@@ -33,8 +33,8 @@ def _format_count(n: int) -> str:
     return f"{(n // 100) / 10:g}k+"
 
 
-def _fit_title(name: str, ts: float) -> tuple[str, float]:
-    """Fit the repo title to the panel column: shrink, then elide at the floor."""
+def _shrink_title_line(name: str, ts: float) -> tuple[str, float]:
+    """Fit one title line to the panel column: shrink, then trail-elide at the floor."""
     max_w = PANEL_WIDTH - 4
     full = _TITLE_SIZE * ts
     floor = _TITLE_FLOOR * ts
@@ -44,20 +44,23 @@ def _fit_title(name: str, ts: float) -> tuple[str, float]:
     if size >= floor:
         return name, size
     max_chars = math.floor(max_w / (0.6 * floor))
-    return _elide_title(name, max_chars), floor
-
-
-def _elide_title(name: str, max_chars: int) -> str:
-    """Drop the owner, then the tail, to fit *name* into *max_chars*."""
     if len(name) <= max_chars:
-        return name
+        return name, floor
+    return f"{name[: max(1, max_chars - 1)]}…", floor
+
+
+def _fit_title(name: str, ts: float) -> list[tuple[str, float]]:
+    """Fit the repo title: one line when it fits, else wrap ``owner/`` above the repo."""
+    line, size = _shrink_title_line(name, ts)
+    if line == name:
+        return [(name, size)]
     slash = name.rfind("/")
-    if slash > 0:
-        tail = f"…/{name[slash + 1 :]}"
-        if len(tail) <= max_chars:
-            return tail
-        return f"…/{name[slash + 1 : slash + 1 + max(1, max_chars - 3)]}…"
-    return f"{name[: max(1, max_chars - 1)]}…"
+    if slash <= 0:
+        return [(line, size)]
+    return [
+        _shrink_title_line(name[: slash + 1], ts),
+        _shrink_title_line(name[slash + 1 :], ts),
+    ]
 
 
 def _shorten_label(path: str) -> str:
@@ -107,8 +110,13 @@ def render_panel(
     which shrinks to fit the panel column on one line, never spilling.
     """
     left = banner.pad
-    title_y = banner.pad + 22 * ts
-    sub_y = title_y + 18 * ts
+    title_lines = _fit_title(repo, ts)
+    # A wrapped slug stacks "owner/" as a small eyebrow line over the repo name.
+    if len(title_lines) == 1:
+        title_ys = [banner.pad + 22 * ts]
+    else:
+        title_ys = [banner.pad + 14 * ts, banner.pad + 38 * ts]
+    sub_y = title_ys[-1] + 18 * ts
     short_sha = sha_label(str(head_sha)) if head_sha else None
     stats_y = sub_y + 24 * ts
 
@@ -128,7 +136,6 @@ def render_panel(
             {"kind": "main", "text": f"{_format_count(metrics.contributor_count)} contributors"}
         )
 
-    title_text, title_size = _fit_title(repo, ts)
     sub_plain = f"structural fingerprint · {short_sha}" if short_sha else "structural fingerprint"
     sub_size = _fit_line(sub_plain, 12 * ts)
     sub_clamped = _clamp_width(sub_plain, sub_size)
@@ -137,23 +144,39 @@ def render_panel(
         sub_content = f'structural fingerprint · <tspan fill="{chrome.muted}">{sha_escaped}</tspan>'
     else:
         sub_content = html.escape(sub_clamped)
-    parts = [
+    parts = []
+    if len(title_lines) > 1:
+        owner_text, owner_size = title_lines[0]
+        parts.append(
+            text(
+                left,
+                title_ys[0],
+                html.escape(owner_text),
+                fill=chrome.muted,
+                size=min(owner_size, _TITLE_FLOOR * ts),
+                extra='font-weight="600"',
+            )
+        )
+    name_text, name_size = title_lines[-1]
+    parts.append(
         text(
             left,
-            title_y,
-            html.escape(title_text),
+            title_ys[-1],
+            html.escape(name_text),
             fill=chrome.ink,
-            size=title_size,
+            size=name_size,
             extra='font-weight="700"',
-        ),
+        )
+    )
+    parts.append(
         text(
             left,
             sub_y,
             sub_content,
             fill=chrome.accent,
             size=sub_size,
-        ),
-    ]
+        )
+    )
 
     y = stats_y
     for i, row in enumerate(rows):

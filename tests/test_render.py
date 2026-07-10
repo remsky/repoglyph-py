@@ -35,6 +35,14 @@ def test_staged_marker_survives_the_panel_sha_cut() -> None:
     assert "abc1234+staged" in render(city)
 
 
+def test_long_slug_title_wraps_instead_of_dropping_the_owner() -> None:
+    slug = "some-longish-organization/a-repository-with-a-long-name"
+    city = dataclasses.replace(_sample_city(), repo=slug)
+    svg = render(city)
+    assert "some-longish-organization/" in svg
+    assert "a-repository-with-a-long-name" in svg
+
+
 def test_render_escapes_repo_and_district_text() -> None:
     city = CityData(
         repo='owner/<repo>&"x"',

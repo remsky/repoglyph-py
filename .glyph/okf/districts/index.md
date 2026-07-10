@@ -1,8 +1,8 @@
 # Districts
 
-* [src/repoglyph/render](src-repoglyph-render.md) - 14 files, 88.9 KB
-* [tests](tests.md) - 13 files, 36.5 KB
-* [src/repoglyph](src-repoglyph.md) - 11 files, 55.7 KB
+* [src/repoglyph/render](src-repoglyph-render.md) - 14 files, 89.6 KB
+* [tests](tests.md) - 13 files, 36.9 KB
+* [src/repoglyph](src-repoglyph.md) - 11 files, 55.8 KB
 * [.root](root.md) - 8 files, 18.5 KB
 * [src/repoglyph/render/fonts](src-repoglyph-render-fonts.md) - 5 files, 60.2 KB
 * [src/repoglyph/metrics](src-repoglyph-metrics.md) - 4 files, 6.9 KB
