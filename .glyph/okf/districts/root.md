@@ -14,7 +14,7 @@ bytes: 18983
 | files | 8 (11% of the repo) |
 | bytes | 18.5 KB |
 | max depth | 0 |
-| recent churn | 676 lines (9% of the window) |
+| recent churn | 680 lines (9% of the window) |
 
 # Largest files
 
@@ -33,7 +33,7 @@ bytes: 18983
 
 | file | lines changed |
 | --- | --- |
-| `README.md` | 305 |
+| `README.md` | 309 |
 | `LICENSE` | 202 |
 | `pyproject.toml` | 61 |
 | `CONTRIBUTING.md` | 57 |

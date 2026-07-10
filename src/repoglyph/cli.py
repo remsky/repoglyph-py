@@ -13,7 +13,7 @@ from repoglyph import __version__
 from repoglyph.cache import load_city, repo_stem, save_city
 from repoglyph.geometry import BANNER_HEIGHT, BANNER_WIDTH
 from repoglyph.gitsource import CloneError, gather_city_from_path, git_available
-from repoglyph.models import filter_files, skip_commons
+from repoglyph.models import filter_commits, filter_files, skip_commons
 from repoglyph.okf import write_okf_bundle
 from repoglyph.palettes import PALETTES, resolve_palette
 from repoglyph.render import (
@@ -331,7 +331,12 @@ def main(argv: list[str] | None = None) -> int:
     okf_note = ""
     if args.okf is not None:
         okf_dir = Path(args.okf) if args.okf else out_path.parent / "okf"
-        okf_data = dataclasses.replace(data, files=files, touches=touches)
+        commit_files = filter_commits(
+            data.commit_files, start_dir=args.start_dir, skip_dirs=skip_dirs
+        )
+        okf_data = dataclasses.replace(
+            data, files=files, touches=touches, commit_files=commit_files
+        )
         doc_count = write_okf_bundle(okf_data, okf_dir, skill=args.skill)
         okf_note = f" + {okf_dir}{os.sep} ({doc_count} docs)"
 

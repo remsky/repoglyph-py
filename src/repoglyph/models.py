@@ -10,6 +10,7 @@ __all__ = [
     "CityData",
     "group_by_district",
     "filter_files",
+    "filter_commits",
     "skip_commons",
     "sha_label",
 ]
@@ -66,6 +67,8 @@ class CityData:
     repo: str
     files: list[SourceFile] = field(default_factory=list)
     touches: dict[str, int] = field(default_factory=dict)
+    #: Paths touched per sampled commit (newest first); feeds change coupling.
+    commit_files: list[list[str]] = field(default_factory=list)
     commit_window: int = 0
     total_contributors: int = 0
     #: Short SHA of the HEAD commit, shown under the panel subtitle when present.
@@ -87,6 +90,30 @@ def _normalize_dir(spec: str) -> str:
     return spec.strip().strip("/")
 
 
+def _path_transform(start_dir: str, skip_dirs: Iterable[str]):
+    """The re-root/prune mapping ``path -> new path | None``, or None when a no-op."""
+    root = _normalize_dir(start_dir)
+    skips = [d for d in (_normalize_dir(s) for s in skip_dirs) if d]
+    if not root and not skips:
+        return None
+
+    def transform(path: str) -> str | None:
+        if root:
+            if not path.startswith(f"{root}/"):
+                return None
+            path = path[len(root) + 1 :]
+        segs = path.split("/")
+        for d in skips:
+            if "/" in d:
+                if path == d or path.startswith(f"{d}/"):
+                    return None
+            elif d in segs[:-1]:
+                return None
+        return path
+
+    return transform
+
+
 def filter_files(
     files: list[SourceFile],
     touches: dict[str, int],
@@ -99,34 +126,14 @@ def filter_files(
     Path-only transform. Returns the inputs unchanged when neither filter applies
     or the result is empty.
     """
-    root = _normalize_dir(start_dir)
-    skips = [d for d in (_normalize_dir(s) for s in skip_dirs) if d]
-    if not root and not skips:
+    transform = _path_transform(start_dir, skip_dirs)
+    if transform is None:
         return files, touches
-
-    def reroot(path: str) -> str | None:
-        if not root:
-            return path
-        if path == root:
-            return None
-        if path.startswith(f"{root}/"):
-            return path[len(root) + 1 :]
-        return None
-
-    def skipped(path: str) -> bool:
-        segs = path.split("/")
-        for d in skips:
-            if "/" in d:
-                if path == d or path.startswith(f"{d}/"):
-                    return True
-            elif d in segs[:-1]:
-                return True
-        return False
 
     keep: dict[str, str] = {}
     for file in files:
-        rerooted = reroot(file.path)
-        if rerooted is None or skipped(rerooted):
+        rerooted = transform(file.path)
+        if rerooted is None:
             continue
         keep[file.path] = rerooted
     if not keep:
@@ -135,6 +142,27 @@ def filter_files(
     out_files = [SourceFile(keep[f.path], f.size) for f in files if f.path in keep]
     out_touches = {keep[p]: count for p, count in touches.items() if p in keep}
     return out_files, out_touches
+
+
+def filter_commits(
+    commit_files: list[list[str]],
+    *,
+    start_dir: str = "",
+    skip_dirs: Iterable[str] = (),
+) -> list[list[str]]:
+    """Apply the ``filter_files`` re-root/prune to per-commit path lists.
+
+    Commits left empty by the filters are dropped.
+    """
+    transform = _path_transform(start_dir, skip_dirs)
+    if transform is None:
+        return commit_files
+    out = []
+    for paths in commit_files:
+        kept = [new for path in paths if (new := transform(path)) is not None]
+        if kept:
+            out.append(kept)
+    return out
 
 
 def sha_label(sha: str, length: int = 7) -> str:

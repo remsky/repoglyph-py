@@ -1,11 +1,11 @@
 # Districts
 
 * [src/repoglyph/render](src-repoglyph-render.md) - 14 files, 89.6 KB
-* [tests](tests.md) - 13 files, 36.9 KB
-* [src/repoglyph](src-repoglyph.md) - 11 files, 55.8 KB
+* [tests](tests.md) - 13 files, 39.3 KB
+* [src/repoglyph](src-repoglyph.md) - 11 files, 57.5 KB
 * [.root](root.md) - 8 files, 18.5 KB
+* [src/repoglyph/metrics](src-repoglyph-metrics.md) - 5 files, 9.2 KB
 * [src/repoglyph/render/fonts](src-repoglyph-render-fonts.md) - 5 files, 60.2 KB
-* [src/repoglyph/metrics](src-repoglyph-metrics.md) - 4 files, 6.9 KB
 * [tests/goldens](tests-goldens.md) - 4 files, 217.6 KB
 * [assets](assets.md) - 3 files, 243.5 KB
 * [.github/workflows](github-workflows.md) - 2 files, 1.3 KB

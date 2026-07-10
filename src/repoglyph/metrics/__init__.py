@@ -18,6 +18,7 @@ from repoglyph.metrics.core import (
     RepoMetrics,
     compute_metrics,
 )
+from repoglyph.metrics.coupling import CHANGE_COUPLING
 from repoglyph.metrics.oversized import OVERSIZED_FILES
 
 __all__ = [
@@ -33,4 +34,4 @@ __all__ = [
 ]
 
 #: Every registered finding, in display order.
-FINDINGS: tuple[Finding, ...] = (OVERSIZED_FILES,)
+FINDINGS: tuple[Finding, ...] = (CHANGE_COUPLING, OVERSIZED_FILES)

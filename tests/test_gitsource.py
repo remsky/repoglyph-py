@@ -5,8 +5,8 @@ from pathlib import Path
 
 from repoglyph.gitsource import (
     _REMOTE_RE,
+    _parse_log,
     _parse_ls_tree,
-    _parse_numstat,
     gather_city_from_path,
 )
 
@@ -30,6 +30,7 @@ def test_staged_reads_the_index_tree(tmp_path: Path) -> None:
     assert {f.path for f in staged.files} == {"a.py", "b.py"}
     assert staged.head_sha == f"{head.head_sha}+staged"
     assert staged.touches == head.touches
+    assert head.commit_files == [["a.py"]]
 
 
 def test_parse_ls_tree_keeps_blobs_with_sizes() -> None:
@@ -49,15 +50,30 @@ def test_parse_ls_tree_handles_paths_with_spaces() -> None:
     assert files[0].size == 10
 
 
-def test_parse_numstat_sums_line_churn_per_file() -> None:
-    # app.py changed in two commits (3+1 then 5+2 = 11), util.py once (2+0), plus
-    # a binary asset reporting no line counts (floors to 1, still touched).
+def test_parse_log_sums_line_churn_per_file() -> None:
+    # app.py: 3+1 then 5+2 = 11; util.py once; the binary ("-\t-") floors to 1.
     output = "\n3\t1\tsrc/app.py\n2\t0\tsrc/util.py\n\n5\t2\tsrc/app.py\n-\t-\tassets/logo.png\n"
-    assert _parse_numstat(output) == {
+    touches, _ = _parse_log(output)
+    assert touches == {
         "src/app.py": 11,
         "src/util.py": 2,
         "assets/logo.png": 1,
     }
+
+
+def test_parse_log_groups_paths_per_commit() -> None:
+    # %H headers delimit commits; the empty third commit (a merge) is dropped.
+    output = (
+        f"{'a' * 40}\n\n3\t1\tsrc/app.py\n2\t0\tsrc/util.py\n"
+        f"{'b' * 40}\n\n5\t2\tsrc/app.py\n-\t-\tassets/logo.png\n"
+        f"{'c' * 40}\n\n"
+    )
+    touches, commits = _parse_log(output)
+    assert commits == [
+        ["src/app.py", "src/util.py"],
+        ["src/app.py", "assets/logo.png"],
+    ]
+    assert touches["src/app.py"] == 11
 
 
 def test_remote_re_extracts_slug_from_common_url_shapes() -> None:

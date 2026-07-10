@@ -14,6 +14,7 @@ def _city() -> CityData:
         repo="owner/repo",
         files=[SourceFile(path="src/a.py", size=10)],
         touches={"src/a.py": 3},
+        commit_files=[["src/a.py"], ["src/a.py", "src/b.py"]],
         commit_window=50,
         head_sha="abc123",
     )

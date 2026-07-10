@@ -77,14 +77,14 @@ def _gather_from_dir(repo_dir: str, *, label: str, commit_window: int, staged: b
         tree = _git(repo_dir, "write-tree").strip()
         head_sha += "+staged"
     files = _parse_ls_tree(_git(repo_dir, "ls-tree", "-r", "--long", tree))
-    touches = _parse_numstat(
+    touches, commit_files = _parse_log(
         _git(
             repo_dir,
             "log",
             f"-n{commit_window}",
             "--numstat",
             "--no-renames",
-            "--format=",
+            "--format=%H",
         )
     )
 
@@ -92,6 +92,7 @@ def _gather_from_dir(repo_dir: str, *, label: str, commit_window: int, staged: b
         repo=label,
         files=files,
         touches=touches,
+        commit_files=commit_files,
         commit_window=commit_window,
         head_sha=head_sha,
     )
@@ -149,13 +150,25 @@ def _parse_ls_tree(output: str) -> list[SourceFile]:
     return files
 
 
-def _parse_numstat(output: str) -> dict[str, int]:
-    """Per file, its summed line churn (additions + deletions) across the listed commits.
+#: A ``--format=%H`` commit-header line (sha1 or sha256 repos).
+_SHA_LINE_RE = re.compile(r"^[0-9a-f]{40,64}$")
 
-    Binary files report ``-`` for both and count as ``1`` (touched, no line count).
+
+def _parse_log(output: str) -> tuple[dict[str, int], list[list[str]]]:
+    """Parse ``git log --numstat --format=%H`` into churn totals and per-commit paths.
+
+    Per file, churn is summed additions + deletions across the listed commits;
+    binary files report ``-`` for both and count as ``1`` (touched, no line
+    count). Commits with no file changes (e.g. merges) are dropped.
     """
     touches: Counter[str] = Counter()
+    commits: list[list[str]] = []
+    current: list[str] | None = None
     for line in output.splitlines():
+        if _SHA_LINE_RE.match(line):
+            current = []
+            commits.append(current)
+            continue
         parts = line.split("\t")
         if len(parts) != 3:
             continue
@@ -167,4 +180,6 @@ def _parse_numstat(output: str) -> dict[str, int]:
             touches[path] += int(added) + int(deleted)
         except ValueError:
             touches[path] += 1  # binary ("-\t-"): mark touched, no line count
-    return dict(touches)
+        if current is not None:
+            current.append(path)
+    return dict(touches), [c for c in commits if c]

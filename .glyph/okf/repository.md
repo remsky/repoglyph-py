@@ -1,10 +1,10 @@
 ---
 type: "Repository"
 title: "remsky/repoglyph-py"
-description: "Structural fingerprint of remsky/repoglyph-py: 71 files in 14 directories, activity from the last 50 commits."
+description: "Structural fingerprint of remsky/repoglyph-py: 72 files in 14 directories, activity from the last 50 commits."
 resource: "https://github.com/remsky/repoglyph-py"
 tags: ["repoglyph", "fingerprint"]
-head_sha: "be5df32711f42f5a9d35997c55f2e62e43116c11+staged"
+head_sha: "9deae42a85775693510302b991f5aa1b2b977b73+staged"
 commit_window: 50
 generator: "repoglyph 0.1.0"
 ---
@@ -13,10 +13,10 @@ generator: "repoglyph 0.1.0"
 
 | metric | value |
 | --- | --- |
-| files | 71 |
+| files | 72 |
 | directories | 14 |
 | max depth | 4 |
-| largest district | src/repoglyph/render, 20% of files |
+| largest district | src/repoglyph/render, 19% of files |
 | modularity | 74 / 100 |
 | recent activity | 71 files touched in the last 50 commits |
 
@@ -24,7 +24,7 @@ generator: "repoglyph 0.1.0"
 
 | category | files | bytes |
 | --- | --- | --- |
-| code | 44 | 193.5 KB |
+| code | 45 | 199.9 KB |
 | config | 8 | 15.0 KB |
 | docs | 4 | 12.8 KB |
 | assets | 9 | 480.6 KB |
@@ -32,12 +32,12 @@ generator: "repoglyph 0.1.0"
 
 # Districts
 
-* [src/repoglyph/render](districts/src-repoglyph-render.md) - 14 files (20%), 89.6 KB, 34% of recent churn
-* [tests](districts/tests.md) - 13 files (18%), 36.9 KB, 16% of recent churn
-* [src/repoglyph](districts/src-repoglyph.md) - 11 files (15%), 55.8 KB, 24% of recent churn
+* [src/repoglyph/render](districts/src-repoglyph-render.md) - 14 files (19%), 89.6 KB, 34% of recent churn
+* [tests](districts/tests.md) - 13 files (18%), 39.3 KB, 16% of recent churn
+* [src/repoglyph](districts/src-repoglyph.md) - 11 files (15%), 57.5 KB, 24% of recent churn
 * [.root](districts/root.md) - 8 files (11%), 18.5 KB, 9% of recent churn
+* [src/repoglyph/metrics](districts/src-repoglyph-metrics.md) - 5 files (7%), 9.2 KB, 3% of recent churn
 * [src/repoglyph/render/fonts](districts/src-repoglyph-render-fonts.md) - 5 files (7%), 60.2 KB, 1% of recent churn
-* [src/repoglyph/metrics](districts/src-repoglyph-metrics.md) - 4 files (6%), 6.9 KB, 3% of recent churn
 * [tests/goldens](districts/tests-goldens.md) - 4 files (6%), 217.6 KB, 0% of recent churn
 * [assets](districts/assets.md) - 3 files (4%), 243.5 KB, 0% of recent churn
 * [.github/workflows](districts/github-workflows.md) - 2 files (3%), 1.3 KB, 1% of recent churn
@@ -49,7 +49,7 @@ generator: "repoglyph 0.1.0"
 
 # Notes
 
-- Activity covers only the last 50 commits at `be5df3271+staged`; an untouched file is dormant in that window, not necessarily dead.
+- Activity covers only the last 50 commits at `9deae42a8+staged`; an untouched file is dormant in that window, not necessarily dead.
 - Sizes are blob bytes at HEAD, not lines of code.
 - Districts are the banner's balanced directory cut at default settings: they show organization, not import coupling.
 

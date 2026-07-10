@@ -62,6 +62,18 @@ def test_root_files_district() -> None:
     assert "- `README.md` (100 B)" in doc
 
 
+def test_change_coupling_hubs_section() -> None:
+    city = _city()
+    assert "# Change-coupling hubs" not in build_okf_bundle(city)["hotspots.md"]
+    city.commit_files = [
+        ["src/app.py", "src/util.py"],
+        ["src/app.py", "src/util.py"],
+    ]
+    doc = build_okf_bundle(city)["hotspots.md"]
+    assert "# Change-coupling hubs" in doc
+    assert "| `src/app.py` | 1 | 2 | `src/util.py` (2) |" in doc
+
+
 def test_hotspots_ranked_and_flagged() -> None:
     doc = build_okf_bundle(_city())["hotspots.md"]
     ranked_rows = [line for line in doc.splitlines() if line.startswith("| `")]

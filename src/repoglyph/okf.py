@@ -7,7 +7,7 @@ field is ``type``. This module renders ``CityData`` into such a bundle:
 
     index.md            directory listing (reserved name, no frontmatter)
     repository.md       fingerprint metrics + district overview
-    hotspots.md         files ranked by recent churn, oversized-file watchlist
+    hotspots.md         churn ranking, change-coupling hubs, oversized files
     districts/<d>.md    one concept per district, with full inventory
     SKILL.md            agent-skill entry point (opt-in via ``skill=True``)
 
@@ -231,7 +231,7 @@ def _hotspots_doc(data: CityData, rows: list[_DistrictRow], cut: set[str]) -> st
         title="Hotspots",
         description=(
             f"Files ranked by line churn over the last {data.commit_window} commits, "
-            "plus oversized source files."
+            "plus change-coupling hubs and oversized source files."
         ),
         tags=["repoglyph", "churn"],
     )

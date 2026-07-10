@@ -1,18 +1,18 @@
 ---
 type: "Directory"
 title: "src/repoglyph/metrics"
-description: "District `src/repoglyph/metrics/`: 4 files, 6.9 KB."
+description: "District `src/repoglyph/metrics/`: 5 files, 9.2 KB."
 tags: ["repoglyph", "district"]
-files: 4
-bytes: 7094
+files: 5
+bytes: 9403
 ---
 
 # Stats
 
 | metric | value |
 | --- | --- |
-| files | 4 (6% of the repo) |
-| bytes | 6.9 KB |
+| files | 5 (7% of the repo) |
+| bytes | 9.2 KB |
 | max depth | 3 |
 | recent churn | 217 lines (3% of the window) |
 
@@ -21,6 +21,7 @@ bytes: 7094
 | file | size | category |
 | --- | --- | --- |
 | `src/repoglyph/metrics/core.py` | 3.5 KB | code |
+| `src/repoglyph/metrics/coupling.py` | 2.2 KB | code |
 | `src/repoglyph/metrics/base.py` | 1.5 KB | code |
 | `src/repoglyph/metrics/__init__.py` | 1.1 KB | code |
 | `src/repoglyph/metrics/oversized.py` | 880 B | code |
@@ -36,13 +37,14 @@ bytes: 7094
 
 # Files
 
-Complete inventory: 4 files.
+Complete inventory: 5 files.
 
 **`src/repoglyph/metrics/`**
 
 - `__init__.py` (1.1 KB)
 - `base.py` (1.5 KB)
 - `core.py` (3.5 KB)
+- `coupling.py` (2.2 KB)
 - `oversized.py` (880 B)
 
 Context: [repository overview](../repository.md).

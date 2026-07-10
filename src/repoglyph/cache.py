@@ -15,7 +15,7 @@ __all__ = ["CACHE_NAME", "repo_stem", "save_city", "load_city"]
 CACHE_NAME = "cache.json"
 
 #: Bump if the serialized shape changes incompatibly.
-_FORMAT_VERSION = 1
+_FORMAT_VERSION = 2
 
 logger = logging.getLogger(__name__)
 
@@ -36,6 +36,7 @@ def save_city(data: CityData, out_dir: Path) -> Path:
         "commit_window": data.commit_window,
         "files": [{"path": f.path, "size": f.size} for f in data.files],
         "touches": data.touches,
+        "commit_files": data.commit_files,
         "total_contributors": data.total_contributors,
         "head_sha": data.head_sha,
         "touch_truncated": data.touch_truncated,
@@ -65,6 +66,7 @@ def load_city(out_dir: Path) -> CityData:
         repo=payload["repo"],
         files=[SourceFile(path=f["path"], size=f["size"]) for f in payload["files"]],
         touches=dict(payload["touches"]),
+        commit_files=[list(c) for c in payload.get("commit_files", [])],
         commit_window=payload["commit_window"],
         total_contributors=payload.get("total_contributors", 0),
         head_sha=payload.get("head_sha"),
