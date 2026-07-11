@@ -14,7 +14,7 @@ bytes: 40276
 | files | 13 (18% of the repo) |
 | bytes | 39.3 KB |
 | max depth | 1 |
-| recent churn | 1,233 lines (16% of the window) |
+| recent churn | 1,317 lines (16% of the window) |
 
 # Largest files
 
@@ -35,15 +35,15 @@ bytes: 40276
 
 | file | lines changed |
 | --- | --- |
-| `tests/test_okf.py` | 193 |
+| `tests/test_okf.py` | 205 |
 | `tests/test_districts.py` | 173 |
 | `tests/test_render.py` | 156 |
 | `tests/test_golden.py` | 121 |
+| `tests/test_gitsource.py` | 119 |
 | `tests/test_parity.py` | 105 |
-| `tests/test_gitsource.py` | 93 |
+| `tests/test_metrics.py` | 91 |
 | `tests/test_palettes.py` | 80 |
 | `tests/test_styles.py` | 74 |
-| `tests/test_metrics.py` | 60 |
 | `tests/test_geometry.py` | 59 |
 
 # Files

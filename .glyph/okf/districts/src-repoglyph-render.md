@@ -14,7 +14,7 @@ bytes: 91796
 | files | 14 (19% of the repo) |
 | bytes | 89.6 KB |
 | max depth | 3 |
-| recent churn | 2,703 lines (34% of the window) |
+| recent churn | 2,703 lines (33% of the window) |
 
 # Largest files
 

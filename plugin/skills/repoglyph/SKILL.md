@@ -66,8 +66,9 @@ Writes `<repo>/.glyph/<owner>_<repo>_<style>.svg`, plus a PNG with the `png` ext
 
 ## OKF
 
-`--okf` writes markdown context files from the same repo data: an index,
-repository and hotspot summaries, and one file per district.
+`--okf` writes markdown context files from the same repo data: an index, a
+repository summary, hotspots (churn ranking plus change-coupling hubs mined
+from commit history), and one file per district.
 
 Add `--skill` and point it at a skills folder to ship the bundle as a
 self-updating map-of-the-codebase agent skill:
@@ -91,7 +92,7 @@ claude plugin install repoglyph@repoglyph
 <summary><b>Limits</b></summary>
 
 - Shows folder structure, not runtime architecture.
-- Lit windows use the sampled commit window, not full history.
+- Lit windows and coupling use the sampled commit window, not full history.
 - File bytes proxy size.
 
 </details>

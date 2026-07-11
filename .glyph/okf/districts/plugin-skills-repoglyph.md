@@ -1,10 +1,10 @@
 ---
 type: "Directory"
 title: "plugin/skills/repoglyph"
-description: "District `plugin/skills/repoglyph/`: 1 file, 3.2 KB."
+description: "District `plugin/skills/repoglyph/`: 1 file, 3.3 KB."
 tags: ["repoglyph", "district"]
 files: 1
-bytes: 3313
+bytes: 3392
 ---
 
 # Stats
@@ -12,7 +12,7 @@ bytes: 3313
 | metric | value |
 | --- | --- |
 | files | 1 (1% of the repo) |
-| bytes | 3.2 KB |
+| bytes | 3.3 KB |
 | max depth | 3 |
 | recent churn | 109 lines (1% of the window) |
 
@@ -20,7 +20,7 @@ bytes: 3313
 
 | file | size | category |
 | --- | --- | --- |
-| `plugin/skills/repoglyph/SKILL.md` | 3.2 KB | docs |
+| `plugin/skills/repoglyph/SKILL.md` | 3.3 KB | docs |
 
 # Recently active
 
@@ -34,6 +34,6 @@ Complete inventory: 1 file.
 
 **`plugin/skills/repoglyph/`**
 
-- `SKILL.md` (3.2 KB)
+- `SKILL.md` (3.3 KB)
 
 Context: [repository overview](../repository.md).

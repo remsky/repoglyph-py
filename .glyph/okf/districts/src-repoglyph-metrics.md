@@ -14,7 +14,7 @@ bytes: 9403
 | files | 5 (7% of the repo) |
 | bytes | 9.2 KB |
 | max depth | 3 |
-| recent churn | 217 lines (3% of the window) |
+| recent churn | 283 lines (3% of the window) |
 
 # Largest files
 
@@ -31,8 +31,9 @@ bytes: 9403
 | file | lines changed |
 | --- | --- |
 | `src/repoglyph/metrics/core.py` | 100 |
+| `src/repoglyph/metrics/coupling.py` | 63 |
 | `src/repoglyph/metrics/base.py` | 54 |
-| `src/repoglyph/metrics/__init__.py` | 36 |
+| `src/repoglyph/metrics/__init__.py` | 39 |
 | `src/repoglyph/metrics/oversized.py` | 27 |
 
 # Files

@@ -14,7 +14,7 @@ bytes: 58931
 | files | 11 (15% of the repo) |
 | bytes | 57.5 KB |
 | max depth | 2 |
-| recent churn | 1,900 lines (24% of the window) |
+| recent churn | 2,020 lines (25% of the window) |
 
 # Largest files
 
@@ -35,13 +35,13 @@ bytes: 58931
 
 | file | lines changed |
 | --- | --- |
-| `src/repoglyph/okf.py` | 550 |
-| `src/repoglyph/cli.py` | 394 |
+| `src/repoglyph/okf.py` | 554 |
+| `src/repoglyph/cli.py` | 403 |
+| `src/repoglyph/models.py` | 240 |
 | `src/repoglyph/geometry.py` | 210 |
-| `src/repoglyph/gitsource.py` | 178 |
-| `src/repoglyph/models.py` | 164 |
+| `src/repoglyph/gitsource.py` | 205 |
 | `src/repoglyph/palettes.py` | 130 |
-| `src/repoglyph/cache.py` | 122 |
+| `src/repoglyph/cache.py` | 126 |
 | `src/repoglyph/palette.py` | 107 |
 | `src/repoglyph/__init__.py` | 23 |
 | `src/repoglyph/hashing.py` | 14 |
