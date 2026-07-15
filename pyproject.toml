@@ -1,6 +1,6 @@
 [project]
 name = "repoglyph"
-version = "0.1.0"
+version = "0.2.0"
 description = "Generate an isometric city-skyline fingerprint banner (SVG) from a local git repository."
 readme = "README.md"
 authors = [{ name = "remsky" }]

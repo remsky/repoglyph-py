@@ -3,15 +3,16 @@
 [![OKF](https://img.shields.io/badge/bundle-OKF-0d1c17?labelColor=4c566a&logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI%2BPGcgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNWVmMmQwIiBzdHJva2Utd2lkdGg9IjIuMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNNiAyaDhsNCA0djE2SDZ6Ii8%2BPHBhdGggZD0iTTE0IDJ2NGg0Ii8%2BPHBhdGggZD0iTTkgOWgyLjVNMTMuNSA5SDE2Ii8%2BPHBhdGggZD0iTTkgMTMuNWg3TTkgMTcuNWg0LjUiLz48L2c%2BPC9zdmc%2BCg%3D%3D)](https://github.com/remsky/repoglyph-py/blob/main/.glyph/okf/index.md)
 
 ![tests](https://img.shields.io/badge/tests-93-5ef2d0)
-![coverage](https://img.shields.io/badge/coverage-88%25-5ef2d0)
+![coverage](https://img.shields.io/badge/coverage-80%25-5ef2d0)
 
 ![repoglyph banner](https://raw.githubusercontent.com/remsky/repoglyph-py/main/assets/banner.png)
 
-Isometric repo-city banners from a local git clone. Each file is a building:
-size drives height, type drives color, recent commits light windows.
++Open Knowledge Format bundle generator showing repo churn, file change coupling, and structural fingerprint. 
 
-Offline port of [repoglyph.net](https://repoglyph.net); hosted (free)
-customization explorer and web-cached banners there.
++Isometric repo-city banners from local git clone. 
+
+(Offline port of [repoglyph.net](https://repoglyph.net); hosted (free)
+customization explorer and web-cached banners there.)
 
 ## Install
 
@@ -79,11 +80,7 @@ self-updating map-of-the-codebase agent skill:
 repoglyph . --okf .claude/skills/repo-map --skill
 ```
 
-That one command is the whole install: Claude Code discovers anything under
-`.claude/skills/` automatically. Commit the folder and every clone has it.
-
-This repo is also a Claude Code plugin marketplace for itself; the plugin
-ships a usage skill so Claude knows how to run repoglyph:
+This repo
 
 ```bash
 claude plugin marketplace add remsky/repoglyph-py
