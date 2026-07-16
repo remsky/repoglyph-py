@@ -1,0 +1,41 @@
+name: glyph
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: glyph-branch
+  cancel-in-progress: true
+
+jobs:
+  refresh-okf:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # OKF hotspots/coupling read full commit history
+
+      - uses: astral-sh/setup-uv@v5
+
+      - run: uv sync
+
+      - name: Generate OKF bundle
+        run: uv run repoglyph . --skill okf --skip-commons
+
+      - name: Publish to glyph branch
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          work="$(mktemp -d)"
+          cp -R okf "$work/okf"
+          cd "$work"
+          git init -q -b glyph
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add okf
+          git commit -q -m "glyph: refresh OKF from ${GITHUB_SHA::7}"
+          git push -f "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD:glyph

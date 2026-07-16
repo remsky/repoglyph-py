@@ -13,7 +13,7 @@ dist/
 .pytest_cache/
 .ruff_cache/
 
-# Generated banners (the OKF bundle stays tracked as a living sample)
-.glyph/*
-!.glyph/okf/
+# Generated outputs: banner comes from repoglyph.net, OKF lives on the `glyph` orphan branch
+.glyph/
 .coverage
+repo_city.code-workspace

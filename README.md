@@ -1,11 +1,11 @@
 # <img src="https://raw.githubusercontent.com/remsky/repoglyph-py/main/assets/logo.svg" width="28" height="28" alt=""> repoglyph
 
-[![OKF](https://img.shields.io/badge/bundle-OKF-0d1c17?labelColor=4c566a&logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI%2BPGcgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNWVmMmQwIiBzdHJva2Utd2lkdGg9IjIuMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNNiAyaDhsNCA0djE2SDZ6Ii8%2BPHBhdGggZD0iTTE0IDJ2NGg0Ii8%2BPHBhdGggZD0iTTkgOWgyLjVNMTMuNSA5SDE2Ii8%2BPHBhdGggZD0iTTkgMTMuNWg3TTkgMTcuNWg0LjUiLz48L2c%2BPC9zdmc%2BCg%3D%3D)](https://github.com/remsky/repoglyph-py/blob/main/.glyph/okf/index.md)
+[![OKF](https://img.shields.io/badge/bundle-OKF-0d1c17?labelColor=4c566a&logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI%2BPGcgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNWVmMmQwIiBzdHJva2Utd2lkdGg9IjIuMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNNiAyaDhsNCA0djE2SDZ6Ii8%2BPHBhdGggZD0iTTE0IDJ2NGg0Ii8%2BPHBhdGggZD0iTTkgOWgyLjVNMTMuNSA5SDE2Ii8%2BPHBhdGggZD0iTTkgMTMuNWg3TTkgMTcuNWg0LjUiLz48L2c%2BPC9zdmc%2BCg%3D%3D)](https://github.com/remsky/repoglyph-py/blob/glyph/okf/index.md)
 
-![tests](https://img.shields.io/badge/tests-93-5ef2d0)
-![coverage](https://img.shields.io/badge/coverage-80%25-5ef2d0)
+![tests](https://img.shields.io/badge/tests-103-5ef2d0)
+![coverage](https://img.shields.io/badge/coverage-88%25-5ef2d0)
 
-![repoglyph banner](https://raw.githubusercontent.com/remsky/repoglyph-py/main/assets/banner.png)
+![repoglyph banner](https://repoglyph.net/remsky/repoglyph-py.svg?palette=light&commits=10&detail=40&style=skyline&streets=1.5&text=1.05)
 
 +Open Knowledge Format bundle generator showing repo churn, file change coupling, and structural fingerprint. 
 
@@ -17,16 +17,34 @@ customization explorer and web-cached banners there.)
 ## Install
 
 ```bash
-uv tool install "repoglyph[png]"   # standalone CLI on PATH
-pip install "repoglyph[png]"       # CLI in the active environment
-uv add --dev "repoglyph[png]"      # project dev dependency (CI, hooks)
+uv tool install "repoglyph"   # standalone CLI on PATH, or
+pip install "repoglyph"       # CLI in the active environment; add the [png] extra for PNG output
 ```
 
-Each installs the `repoglyph` command. Python 3.12+. Drop the `png` extra for
-SVG-only output.
+Each installs the `repoglyph` command. Python 3.12+.
 
 ## Usage
 
+<details>
+<summary><b>Agent Usage</b></summary>
+
+A usage skill for repoglyph itself can be installed via npx skills, plugin marketplace, or found in this repo ([plugin/skills/repoglyph](plugin/skills/repoglyph))
+
+```bash
+npx skills add remsky/repoglyph-py
+```
+OR
+```bash
+claude plugin marketplace add remsky/repoglyph-py
+claude plugin install repoglyph@repoglyph
+```
+
+</details>
+
+<details>
+<summary><b>CLI Usage</b></summary>
+
+### Basic usage
 ```bash
 repoglyph                 # current repo w/ defaults
 repoglyph ../project
@@ -35,9 +53,7 @@ repoglyph . --style skyline --palette neon
 
 Writes `<repo>/.glyph/<owner>_<repo>_<style>.svg`, plus a PNG with the `png` extra.
 
-<details>
-<summary><b>All flags</b></summary>
-
+### All flags
 | Flag | Default | Meaning |
 | --- | --- | --- |
 | `--commits N` | `50` | commits used for lit windows |
@@ -47,44 +63,43 @@ Writes `<repo>/.glyph/<owner>_<repo>_<style>.svg`, plus a PNG with the `png` ext
 | `--full` | off | fit canvas to the whole city |
 | `--out FILE` | auto | output SVG path |
 | `--out-dir DIR` | `<repo>/.glyph` | folder for all outputs |
-| `--no-png` | off | skip PNG output |
+| `--svg` / `--no-svg` | on for a banner, off with `--okf`/`--skill` | write the SVG |
+| `--png` / `--no-png` | on for a banner, off with `--okf`/`--skill` | write the PNG (needs the `png` extra) |
 | `--skip-commons` | off | drop lockfiles from the city |
 | `--staged` | off | draw HEAD + staged changes |
 | `--okf [DIR]` | off | write an OKF context bundle |
-| `--skill` | off | add a SKILL.md to the OKF bundle |
+| `--skill [DIR]` | off | skill-compliant OKF bundle (default `.claude/skills/repo-map`) |
 | `--cache` | off | save repo data for `--from-cache` |
 
 `repoglyph --help` for the rest.
 
-</details>
-
-<details>
-<summary><b>Styles</b></summary>
-
+### Styles
 - `oblique`: flat cabinet-oblique map (default)
 - `skyline`: one building per file
 - `highrise`: one tower per district, floors are subdirs
 
 </details>
 
-## OKF
+## OKF / Skill Generation
 
 `--okf` writes markdown context files from the same repo data: an index, a
 repository summary, hotspots (churn ranking plus change-coupling hubs mined
-from commit history), and one file per district.
+from commit history), and one file per district. In bundle mode no banner is
+drawn; add `--svg` or `--png` if you also want the image.
 
-Add `--skill` and point it at a skills folder to ship the bundle as a
-self-updating map-of-the-codebase agent skill:
+See it live: the [`glyph` branch](https://github.com/remsky/repoglyph-py/tree/glyph/okf)
+holds the bundle for this repo, regenerated by CI on every push to `main`.
 
 ```bash
-repoglyph . --okf .claude/skills/repo-map --skill
+repoglyph . --okf
 ```
 
-This repo
+
+Or shortcut with `--skill` to generate with skill-compliant filenames and frontmatter, so an agent can quickly get its bearings on any repo. 
 
 ```bash
-claude plugin marketplace add remsky/repoglyph-py
-claude plugin install repoglyph@repoglyph
+repoglyph . --skill # -> .claude/skills/repo-map 
+repoglyph . --skill <custom output path>
 ```
 
 <details>

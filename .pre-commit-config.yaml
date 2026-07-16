@@ -7,9 +7,3 @@ repos:
         language: system
         pass_filenames: false
         always_run: true
-      - id: repoglyph-outputs
-        name: refresh + stage the banner, OKF bundle, and plugin skill
-        entry: uv run python scripts/update_glyph.py
-        language: system
-        pass_filenames: false
-        always_run: true
