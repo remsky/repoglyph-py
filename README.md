@@ -5,7 +5,7 @@
 ![tests](https://img.shields.io/badge/tests-103-5ef2d0)
 ![coverage](https://img.shields.io/badge/coverage-88%25-5ef2d0)
 
-![repoglyph banner](https://repoglyph.net/remsky/repoglyph-py.svg?palette=light&commits=10&detail=40&style=skyline&streets=1.5&text=1.05)
+![repoglyph banner](https://repoglyph.net/remsky/repoglyph-py.svg?palette=light&commits=10&detail=40&style=skyline&streets=1.5&text=1.05&skip_dirs=.glyph,plugin)
 
 +Open Knowledge Format bundle generator showing repo churn, file change coupling, and structural fingerprint. 
 
