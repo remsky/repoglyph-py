@@ -8,8 +8,15 @@ field is ``type``. This module renders ``CityData`` into such a bundle:
     index.md            directory listing (reserved name, no frontmatter)
     repository.md       fingerprint metrics + district overview
     hotspots.md         churn ranking, change-coupling hubs, oversized files
-    districts/<d>.md    one concept per district, with full inventory
+    districts/index.md  per-district stats table (one row per district)
     SKILL.md            agent-skill entry point (opt-in via ``skill=True``)
+    districts/<d>.md    per-district concept docs (opt-in via ``inventory=True``)
+
+Per-district documents (with their full file listings) are opt-in
+(``inventory=True`` / ``--inventory``): a reader sitting in a checkout gets a
+fresher, complete listing from the tree itself, so by default the bundle
+carries only what a listing cannot show (history-derived activity, size
+aggregates, the district cut) in a flat handful of documents.
 
 Districts are the banner's balanced directory cut (at default settings), so
 both artifacts describe the same neighbourhoods.
@@ -67,6 +74,7 @@ def build_okf_bundle(
     metrics: RepoMetrics | None = None,
     *,
     skill: bool = False,
+    inventory: bool = False,
 ) -> dict[str, str]:
     """Render *data* into a bundle: relative posix path -> markdown content."""
     if metrics is None:
@@ -92,16 +100,17 @@ def build_okf_bundle(
     metrics = _cut_metrics(metrics, rows, cut)
 
     bundle = {
-        "repository.md": _repository_doc(data, metrics, rows),
-        "hotspots.md": _hotspots_doc(data, rows, cut),
-        "index.md": _root_index(data, rows),
+        "repository.md": _repository_doc(data, metrics, rows, inventory=inventory),
+        "hotspots.md": _hotspots_doc(data, rows, cut, inventory=inventory),
+        "index.md": _root_index(data, rows, inventory=inventory),
     }
-    for row in rows:
-        bundle[f"districts/{row.slug}.md"] = _district_doc(data, row, cut)
+    if inventory:
+        for row in rows:
+            bundle[f"districts/{row.slug}.md"] = _district_doc(data, row, cut)
     if rows:
-        bundle["districts/index.md"] = _district_index(rows)
+        bundle["districts/index.md"] = _district_index(data, rows, inventory=inventory)
     if skill:
-        bundle["SKILL.md"] = _skill_doc(data, rows)
+        bundle["SKILL.md"] = _skill_doc(data, rows, inventory=inventory)
     return bundle
 
 
@@ -111,13 +120,14 @@ def write_okf_bundle(
     metrics: RepoMetrics | None = None,
     *,
     skill: bool = False,
+    inventory: bool = False,
 ) -> int:
     """Write the bundle under *out_dir* and return the number of documents.
 
     ``districts/*.md`` is cleared first so a changed district cut does not
     leave a stale concept behind; treat *out_dir* as generated output.
     """
-    bundle = build_okf_bundle(data, metrics, skill=skill)
+    bundle = build_okf_bundle(data, metrics, skill=skill, inventory=inventory)
     stale = out_dir / "districts"
     if stale.is_dir():
         for path in stale.glob("*.md"):
@@ -168,7 +178,9 @@ class _DistrictRow:
 # --------------------------------------------------------------------------
 # documents
 # --------------------------------------------------------------------------
-def _repository_doc(data: CityData, metrics: RepoMetrics, rows: list[_DistrictRow]) -> str:
+def _repository_doc(
+    data: CityData, metrics: RepoMetrics, rows: list[_DistrictRow], *, inventory: bool
+) -> str:
     front = _frontmatter(
         type="Repository",
         title=data.repo,
@@ -207,7 +219,11 @@ def _repository_doc(data: CityData, metrics: RepoMetrics, rows: list[_DistrictRo
         lines += [f"| {label} | {count} | {size} |" for label, count, size in composition]
     if rows:
         lines += ["", "# Districts", ""]
-        lines += [f"* {row.link} - {row.blurb(metrics.file_count)}" for row in rows]
+        if inventory:
+            lines += [f"* {row.link} - {row.blurb(metrics.file_count)}" for row in rows]
+        else:
+            lines += [f"* {row.name} - {row.blurb(metrics.file_count)}" for row in rows]
+            lines += ["", "Per-district stats live in [districts](districts/index.md)."]
     lines += [
         "",
         "# Notes",
@@ -225,18 +241,23 @@ def _repository_doc(data: CityData, metrics: RepoMetrics, rows: list[_DistrictRo
     return "\n".join(lines)
 
 
-def _hotspots_doc(data: CityData, rows: list[_DistrictRow], cut: set[str]) -> str:
+def _hotspots_doc(
+    data: CityData, rows: list[_DistrictRow], cut: set[str], *, inventory: bool
+) -> str:
+    findings = [(finding, finding.compute(data)) for finding in FINDINGS]
+    extras = [f.title[0].lower() + f.title[1:] for f, found in findings if found]
     front = _frontmatter(
         type="Report",
         title="Hotspots",
         description=(
-            f"Files ranked by line churn over the last {data.commit_window} commits, "
-            "plus change-coupling hubs and oversized source files."
+            f"Files ranked by line churn over the last {data.commit_window} commits"
+            + (", plus " + " and ".join(extras) if extras else "")
+            + "."
         ),
         tags=["repoglyph", "churn"],
     )
     sizes = {file.path: file.size for file in data.files}
-    links = {row.name: row.link for row in rows}
+    links = {row.name: row.link for row in rows} if inventory else {}
     ranked = sorted(data.touches.items(), key=lambda item: (-item[1], item[0]))
 
     lines = [front, "", "# Ranked by recent churn", ""]
@@ -256,8 +277,7 @@ def _hotspots_doc(data: CityData, rows: list[_DistrictRow], cut: set[str]) -> st
     else:
         lines.append("No commit activity was sampled.")
 
-    for finding in FINDINGS:
-        found = finding.compute(data)
+    for finding, found in findings:
         if not found:
             continue
         lines += [
@@ -353,7 +373,7 @@ def _files_section(row: _DistrictRow) -> list[str]:
     return lines
 
 
-def _root_index(data: CityData, rows: list[_DistrictRow]) -> str:
+def _root_index(data: CityData, rows: list[_DistrictRow], *, inventory: bool) -> str:
     lines = [
         f"# {data.repo}",
         "",
@@ -364,13 +384,15 @@ def _root_index(data: CityData, rows: list[_DistrictRow]) -> str:
         "* [Hotspots](hotspots.md) - files ranked by recent churn",
     ]
     if rows:
+        lines.append("* [Districts](districts/index.md) - per-district stats")
+    if inventory and rows:
         lines += ["", "## Districts", ""]
         lines += [f"* {row.link} - {row.blurb(len(data.files))}" for row in rows]
     lines.append("")
     return "\n".join(lines)
 
 
-def _skill_doc(data: CityData, rows: list[_DistrictRow]) -> str:
+def _skill_doc(data: CityData, rows: list[_DistrictRow], *, inventory: bool) -> str:
     """An agent-skill entry point, so the bundle can live under ``.claude/skills``.
 
     The frontmatter stays sha-free: skill descriptions load every session, and
@@ -406,19 +428,32 @@ def _skill_doc(data: CityData, rows: list[_DistrictRow]) -> str:
         "2. [hotspots.md](hotspots.md) - files ranked by recent churn",
     ]
     if rows:
-        lines.append(
-            "3. [districts/](districts/index.md) - per-district stats and file inventories"
-        )
+        detail = " and file inventories" if inventory else ""
+        lines.append(f"3. [districts/](districts/index.md) - per-district stats{detail}")
     lines += ["", f"For the project's own introduction, see {readme}.", ""]
     return "\n".join(lines)
 
 
-def _district_index(rows: list[_DistrictRow]) -> str:
-    lines = ["# Districts", ""]
-    lines += [
-        f"* [{row.name}]({row.slug}.md) - {_n_files(len(row.files))}, {fmt_bytes(row.bytes)}"
-        for row in rows
+def _district_index(data: CityData, rows: list[_DistrictRow], *, inventory: bool) -> str:
+    lines = [
+        "# Districts",
+        "",
+        f"One row per drawn district; activity covers the last {data.commit_window} commits.",
+        "",
+        "| district | files | bytes | max depth | recent churn | largest file |",
+        "| --- | --- | --- | --- | --- | --- |",
     ]
+    total_files = len(data.files)
+    for row in rows:
+        name = f"[{row.name}]({row.slug}.md)" if inventory else row.name
+        share = len(row.files) / total_files if total_files else 0.0
+        depth = max((f.depth for f in row.files), default=0)
+        largest = min(row.files, key=lambda f: (-f.size, f.path))
+        lines.append(
+            f"| {name} | {len(row.files):,} ({share:.0%}) | {fmt_bytes(row.bytes)} | {depth} "
+            f"| {row.churn:,} lines ({row.churn_share:.0%}) "
+            f"| {code_cell(largest.path)} ({fmt_bytes(largest.size)}) |"
+        )
     lines.append("")
     return "\n".join(lines)
 

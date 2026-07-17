@@ -16,6 +16,7 @@ from dataclasses import dataclass, field
 from repoglyph.geometry import _CONTENT_PAD, _ROOF_MARGIN, BannerLayout, iso
 from repoglyph.models import SourceFile
 from repoglyph.palette import CATEGORY_COLORS, Category, categorize
+from repoglyph.palettes import DARK_CHROME, Chrome
 from repoglyph.render.districts import _LABEL_SIZE, Projection, _overlaps
 from repoglyph.render.lighting import window_light
 from repoglyph.render.scene import _Cube, _scale
@@ -328,6 +329,7 @@ def render_highrise(
     max_touch: int,
     *,
     colors: _Colors = CATEGORY_COLORS,
+    chrome: Chrome = DARK_CHROME,
 ) -> str:
     """Render every neighbourhood tower, painter-sorted back-to-front."""
     ordered = sorted(scene.towers, key=lambda b: iso(b.grid_x, b.grid_y)[::-1])

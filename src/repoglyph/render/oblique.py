@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from repoglyph.geometry import _CONTENT_PAD, _build_tree
 from repoglyph.models import SourceFile
 from repoglyph.palette import CATEGORY_COLORS, Category, categorize
+from repoglyph.palettes import DARK_CHROME, Chrome
 from repoglyph.render.lighting import window_light
 from repoglyph.render.scene import (
     _FACE_DIM,
@@ -125,6 +126,7 @@ def render_oblique(
     max_touch: int,
     *,
     colors: _Colors = CATEGORY_COLORS,
+    chrome: Chrome = DARK_CHROME,
 ) -> str:
     """Render every cube, painter-sorted back-to-front."""
     ordered = sorted(scene.towers, key=lambda tower: (tower.grid_y, -tower.grid_x))

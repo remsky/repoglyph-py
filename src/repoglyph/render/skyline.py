@@ -15,6 +15,7 @@ from repoglyph.geometry import (
 )
 from repoglyph.models import SourceFile
 from repoglyph.palette import CATEGORY_COLORS, Category
+from repoglyph.palettes import DARK_CHROME, Chrome
 from repoglyph.render.buildings import render_buildings
 from repoglyph.render.scene import Tower, VoxelScene, _Cube, _pack_node, _PackConfig
 
@@ -72,6 +73,7 @@ def render_skyline(
     max_touch: int,
     *,
     colors: _Colors = CATEGORY_COLORS,
+    chrome: Chrome = DARK_CHROME,
 ) -> str:
     """Draw each district tower as one windowed building."""
     buildings = [

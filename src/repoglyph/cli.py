@@ -272,6 +272,13 @@ def build_parser() -> argparse.ArgumentParser:
         "a skill-mode shortcut for --okf (default: .claude/skills/repo-map)",
     )
     parser.add_argument(
+        "--inventory",
+        action="store_true",
+        help="add one document per district, with its full file inventory, to the "
+        "--okf/--skill bundle (default: off; the flat bundle carries a per-district "
+        "stats table and a reader in a checkout can list files itself)",
+    )
+    parser.add_argument(
         "--version",
         action="version",
         version=f"%(prog)s {__version__}",
@@ -386,7 +393,7 @@ def main(argv: list[str] | None = None) -> int:
         okf_data = dataclasses.replace(
             data, files=files, touches=touches, commit_files=commit_files
         )
-        doc_count = write_okf_bundle(okf_data, okf_dir, skill=make_skill)
+        doc_count = write_okf_bundle(okf_data, okf_dir, skill=make_skill, inventory=args.inventory)
         outputs.append(f"{okf_dir}{os.sep} ({doc_count} docs)")
 
     summary = " + ".join(outputs) if outputs else "nothing (enable --svg/--png or --okf/--skill)"

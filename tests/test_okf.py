@@ -44,17 +44,22 @@ def test_repository_doc_contents() -> None:
     assert 'type: "Repository"' in doc
     assert 'resource: "https://github.com/owner/repo"' in doc
     assert "modularity" in doc
-    assert "[src](districts/src.md)" in doc
+    # Flat bundle: district bullets are unlinked and route to the stats table.
+    assert "* src - " in doc
+    assert "[districts](districts/index.md)" in doc
+    assert "[src](districts/src.md)" not in doc
+    linked = build_okf_bundle(_city(), inventory=True)["repository.md"]
+    assert "[src](districts/src.md)" in linked
 
 
 def test_reserved_district_name_is_renamed() -> None:
-    bundle = build_okf_bundle(_city())
+    bundle = build_okf_bundle(_city(), inventory=True)
     assert "districts/index-district.md" in bundle
     assert "[index](districts/index-district.md)" in bundle["index.md"]
 
 
 def test_root_files_district() -> None:
-    bundle = build_okf_bundle(_city())
+    bundle = build_okf_bundle(_city(), inventory=True)
     assert "districts/root.md" in bundle
     doc = bundle["districts/root.md"]
     assert "Files at the repository root." in doc
@@ -64,13 +69,16 @@ def test_root_files_district() -> None:
 
 def test_change_coupling_hubs_section() -> None:
     city = _city()
-    assert "# Change-coupling hubs" not in build_okf_bundle(city)["hotspots.md"]
+    doc = build_okf_bundle(city)["hotspots.md"]
+    assert "# Change-coupling hubs" not in doc
+    assert "50 commits, plus oversized source files." in doc  # frontmatter lists real sections
     city.commit_files = [
         ["src/app.py", "src/util.py"],
         ["src/app.py", "src/util.py"],
     ]
     doc = build_okf_bundle(city)["hotspots.md"]
     assert "# Change-coupling hubs" in doc
+    assert "plus change-coupling hubs and oversized source files." in doc
     assert "| `src/app.py` | 1 | 2 | `src/util.py` (2) |" in doc
 
 
@@ -82,8 +90,19 @@ def test_hotspots_ranked_and_flagged() -> None:
     assert "# Oversized source files" in doc  # app.py is over the 40 KB threshold
 
 
+def test_default_bundle_is_flat() -> None:
+    bundle = build_okf_bundle(_city())
+    assert set(bundle) == {"index.md", "repository.md", "hotspots.md", "districts/index.md"}
+    table = bundle["districts/index.md"]
+    assert "| district | files | bytes | max depth | recent churn | largest file |" in table
+    assert "| src | 2 (40%) | 49.3 KB | 1 | 120 lines (90%) | `src/app.py` (48.8 KB) |" in table
+    assert "[src](src.md)" not in table  # no district docs to link to
+    linked = build_okf_bundle(_city(), inventory=True)["districts/index.md"]
+    assert "| [src](src.md) | 2 (40%)" in linked
+
+
 def test_district_files_inventory() -> None:
-    doc = build_okf_bundle(_city())["districts/src.md"]
+    doc = build_okf_bundle(_city(), inventory=True)["districts/src.md"]
     assert "# Files" in doc
     assert "Complete inventory: 2 files." in doc
     assert "**`src/`**" in doc
@@ -93,7 +112,8 @@ def test_district_files_inventory() -> None:
 
 def test_district_files_inventory_truncates() -> None:
     files = [SourceFile(f"big/f{i:04}.py", size=10) for i in range(250)]
-    doc = build_okf_bundle(CityData(repo="o/r", files=files))["districts/big.md"]
+    data = CityData(repo="o/r", files=files)
+    doc = build_okf_bundle(data, inventory=True)["districts/big.md"]
     assert "First 200 of 250 files, sorted by path." in doc
     assert "- `f0199.py` (10 B)" in doc
     assert "`f0200.py`" not in doc
@@ -107,15 +127,17 @@ def test_districts_follow_banner_cut() -> None:
         + [SourceFile(f"pkg/loose{i}.py", size=100) for i in range(4)]
         + [SourceFile("docs/intro.md", size=50)]
     )
-    bundle = build_okf_bundle(CityData(repo="o/r", files=files))
+    bundle = build_okf_bundle(CityData(repo="o/r", files=files), inventory=True)
     assert {"districts/pkg-core.md", "districts/pkg-io.md", "districts/pkg.md"} <= bundle.keys()
     assert "| largest district | pkg/core, 33% of files |" in bundle["repository.md"]
 
 
 def test_links_are_relative() -> None:
-    bundle = build_okf_bundle(_city())
-    for path, doc in bundle.items():
-        assert "](/" not in doc, f"{path} has a root-absolute link"
+    for inventory in (False, True):
+        bundle = build_okf_bundle(_city(), inventory=inventory)
+        for path, doc in bundle.items():
+            assert "](/" not in doc, f"{path} has a root-absolute link"
+    bundle = build_okf_bundle(_city(), inventory=True)
     assert "[repository overview](../repository.md)" in bundle["districts/src.md"]
     assert "[src](src.md)" in bundle["districts/index.md"]
 
@@ -129,13 +151,14 @@ def test_lockfile_churn_counts_like_any_other_file() -> None:
     assert "| `src/app.py` | 5 |" in doc
     assert "excluded" not in doc
     # District churn shares include it (999 of 1004), matching the banner's lit windows.
-    assert "| recent churn | 999 lines (100% of the window) |" in bundle["districts/root.md"]
-    assert "| recent churn | 5 lines (0% of the window) |" in bundle["districts/src.md"]
+    table = bundle["districts/index.md"]
+    assert "| 999 lines (100%) | `uv.lock` (100 B) |" in table
+    assert "| 5 lines (0%) | `src/app.py` (100 B) |" in table
 
 
 def test_cap_overflow_district_is_flagged() -> None:
     files = [SourceFile(f"pkg/sub{i:02}/f.py", size=100) for i in range(20)]
-    bundle = build_okf_bundle(CityData(repo="o/r", files=files))
+    bundle = build_okf_bundle(CityData(repo="o/r", files=files), inventory=True)
     overflow = bundle["districts/pkg.md"]
     assert "no banner label" in overflow
     assert "district cap" in overflow

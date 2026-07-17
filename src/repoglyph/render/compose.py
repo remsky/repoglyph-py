@@ -160,7 +160,7 @@ def render(
 
     theme = palette or resolve_palette(None)
     colors, chrome = theme.colors, theme.chrome
-    city = spec.render(scene, touches, max_touch, colors=colors)
+    city = spec.render(scene, touches, max_touch, colors=colors, chrome=chrome)
     legend = render_legend(banner, colors=colors, chrome=chrome)
 
     # Resolve the district cut once, shared by panel stats and layout layers.
