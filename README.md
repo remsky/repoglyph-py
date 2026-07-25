@@ -16,12 +16,17 @@ customization explorer and web-cached banners there.)
 
 ## Install
 
+Standalone CLI on PATH
 ```bash
-uv tool install "repoglyph"   # standalone CLI on PATH, or
-pip install "repoglyph"       # CLI in the active environment; add the [png] extra for PNG output
+uv tool install "repoglyph"
+```
+**OR** CLI in the active environment
+```bash
+pip install "repoglyph"       
 ```
 
-Each installs the `repoglyph` command. Python 3.12+.
+Each installs the `repoglyph` command. Python 3.12+. Use  `repoglyph[png]` to include the extra for PNG output
+```bash
 
 ## Usage
 
