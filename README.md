@@ -26,7 +26,6 @@ pip install "repoglyph"
 ```
 
 Each installs the `repoglyph` command. Python 3.12+. Use  `repoglyph[png]` to include the extra for PNG output
-```bash
 
 ## Usage
 
@@ -38,6 +37,7 @@ A usage skill for repoglyph itself can be installed via npx skills, plugin marke
 ```bash
 npx skills add remsky/repoglyph-py
 ```
+
 OR
 ```bash
 claude plugin marketplace add remsky/repoglyph-py
